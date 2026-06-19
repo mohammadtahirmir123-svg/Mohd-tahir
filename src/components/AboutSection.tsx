@@ -1,5 +1,7 @@
 import React from 'react';
-import { Target, Award, Shield, Cpu, BookOpen, Send } from 'lucide-react';
+import { Target, Award, Shield, Cpu, BookOpen, Send, UserCheck } from 'lucide-react';
+// @ts-ignore
+import portraitImg from '../assets/images/mohd_tahir_cartoon_portrait_1781852370555.jpg';
 
 export default function AboutSection() {
   const pillars = [
@@ -43,10 +45,55 @@ export default function AboutSection() {
         </div>
 
         {/* Bento Grid layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
-          {/* Large Left Column: Paragraph Story */}
-          <div className="lg:col-span-7 flex flex-col justify-between glass-panel p-8 sm:p-12 rounded-3xl relative overflow-hidden group">
+          {/* Column 1: Portrait Panel (col-span-4) */}
+          <div className="lg:col-span-4 flex flex-col justify-between glass-panel p-4 rounded-3xl relative overflow-hidden group select-none">
+            {/* Visual scanlines context */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,10,36,0)_98%,rgba(168,85,247,0.05)_2%)] bg-[size:100%_4px] opacity-15 pointer-events-none z-20" />
+            
+            {/* Image frame */}
+            <div className="relative w-full h-[380px] sm:h-[420px] lg:h-[450px] rounded-2xl overflow-hidden bg-[#0a0518] border border-purple-500/20 group-hover:border-purple-500/40 transition-colors duration-500 shadow-inner">
+              <img
+                src={portraitImg}
+                alt="Mohd Tahir Portrait"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-[1.03] duration-500 transition-transform ease-out"
+              />
+              
+              {/* Overlay glass tint */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#03000b]/90 via-transparent to-purple-500/5 pointer-events-none z-10" />
+
+              {/* Verified Badge */}
+              <span className="absolute top-3 left-3 bg-[#030012]/80 backdrop-blur-md border border-purple-500/30 px-2.5 py-1 rounded-md font-mono text-[8px] text-purple-300 uppercase tracking-widest z-15 select-none shadow-sm flex items-center space-x-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <span>VERIFIED REPRESENATIVE</span>
+              </span>
+
+              {/* Corner metadata label */}
+              <span className="absolute top-3 right-3 bg-[#030012]/80 backdrop-blur-md border border-purple-500/30 px-2.5 py-1 rounded-md font-mono text-[8px] text-purple-400 uppercase tracking-widest z-15 select-none shadow-sm flex items-center space-x-1">
+                <UserCheck className="w-2.5 h-2.5 text-purple-400" />
+                <span>MT_ID_303</span>
+              </span>
+
+              {/* Identity Strip */}
+              <div className="absolute bottom-3 left-3 right-3 z-15 bg-[#03000f]/90 backdrop-blur-md border border-purple-500/20 p-3 rounded-xl flex items-center justify-between shadow-lg">
+                <div className="text-left">
+                  <span className="font-mono text-[7px] text-purple-400 tracking-widest uppercase font-bold">REPRESENTATIVE</span>
+                  <h4 className="font-display font-extrabold text-[12px] text-white uppercase tracking-wider">MOHD TAHIR</h4>
+                </div>
+                <div className="text-right flex flex-col items-end">
+                  <span className="font-mono text-[7px] text-gray-400 tracking-widest uppercase">DISCIPLINE</span>
+                  <span className="font-mono text-[8px] text-indigo-400 uppercase font-bold tracking-wider">
+                    AI ARCHITECT
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Column 2: Paragraph Story (col-span-5) */}
+          <div className="lg:col-span-5 flex flex-col justify-between glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden group">
             {/* Tech details absolute card */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 opacity-50 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full pointer-events-none" />
             
@@ -55,11 +102,11 @@ export default function AboutSection() {
                 MOHD TAHIR — GLOBAL MISSION
               </div>
               
-              <h3 className="font-display font-semibold text-xl sm:text-2xl text-white mb-6">
-                Transforming Ambitions Into Dynamic Software Realities
+              <h3 className="font-display font-semibold text-lg sm:text-xl text-white mb-6">
+                Transforming Ambitions Into Dynamic Realities
               </h3>
               
-              <div className="space-y-6 text-gray-300 text-sm sm:text-base font-light leading-relaxed">
+              <div className="space-y-5 text-gray-300 text-xs sm:text-sm font-light leading-relaxed">
                 <p>
                   My name is <strong className="text-white font-medium">Mohd Tahir</strong>, a passionate technology professional with over 3 years of experience in web design, web development, UI/UX design, AI automation, graphic design, and digital skills training.
                 </p>
@@ -73,43 +120,43 @@ export default function AboutSection() {
             </div>
 
             {/* Micro credentials block */}
-            <div className="grid grid-cols-3 gap-4 mt-8 sm:mt-12 pt-8 border-t border-purple-500/10">
+            <div className="grid grid-cols-3 gap-2 mt-6 pt-6 border-t border-purple-500/10">
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-gray-500">AESTHETIC LEVEL</span>
-                <p className="font-display font-semibold text-sm text-gray-200 mt-1">Agency-First</p>
+                <span className="font-mono text-[8px] uppercase tracking-wider text-gray-400">AESTHETIC LEVEL</span>
+                <p className="font-display font-bold text-[11px] text-gray-200 mt-1">Agency-First</p>
               </div>
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-gray-500">SPEEDMETRICS</span>
-                <p className="font-display font-semibold text-sm text-gray-200 mt-1">95%+ LCP</p>
+                <span className="font-mono text-[8px] uppercase tracking-wider text-gray-400">SPEEDMETRICS</span>
+                <p className="font-display font-bold text-[11px] text-gray-200 mt-1">95%+ LCP</p>
               </div>
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-gray-500">INTEGRATION</span>
-                <p className="font-display font-semibold text-sm text-gray-200 mt-1">AI Autonomous</p>
+                <span className="font-mono text-[8px] uppercase tracking-wider text-gray-400">INTEGRATION</span>
+                <p className="font-display font-bold text-[11px] text-gray-200 mt-1">AI Autonomous</p>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Key Pillars list */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+          {/* Column 3: Key Pillars list (col-span-3) */}
+          <div className="lg:col-span-3 flex flex-col justify-between space-y-4">
             {pillars.map((pillar, idx) => (
               <div
                 key={idx}
-                className="glass-panel p-6 sm:p-8 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-all duration-300"
+                className="glass-panel p-5 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex-1 flex flex-col justify-center"
               >
                 {/* Visual corner node index */}
-                <span className="absolute top-3 right-4 font-mono text-[9px] text-purple-500/40 font-bold">
-                  PILLAR // 0{idx + 1}
+                <span className="absolute top-2.5 right-3.5 font-mono text-[8px] text-purple-500/40 font-bold">
+                  PILLAR 0{idx + 1}
                 </span>
 
-                <div className="flex items-start space-x-4">
-                  <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20 group-hover:border-purple-500/40 group-hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300">
+                <div className="flex items-start space-x-3">
+                  <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 group-hover:border-purple-500/40 group-hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 shrink-0">
                     {pillar.icon}
                   </div>
                   <div>
-                    <h4 className="font-display font-bold text-sm uppercase text-white tracking-wider">
+                    <h4 className="font-display font-bold text-[11px] uppercase text-white tracking-wider">
                       {pillar.title}
                     </h4>
-                    <p className="text-gray-400 text-xs sm:text-sm mt-2 font-light leading-relaxed">
+                    <p className="text-gray-450 text-[11px] mt-1.5 font-light leading-relaxed">
                       {pillar.desc}
                     </p>
                   </div>
