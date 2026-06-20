@@ -6,11 +6,20 @@ interface InteractiveCanvasProps {
 
 export default function InteractiveCanvas({ mode = 'hero' }: InteractiveCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [mouse, setMouse] = useState({ x: 0, y: 0, targetX: 0, targetY: 0 });
+  const mouseRef = useRef({ targetX: 0, targetY: 0 });
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -28,16 +37,13 @@ export default function InteractiveCanvas({ mode = 'hero' }: InteractiveCanvasPr
 
     window.addEventListener('resize', handleResize);
 
-    // Mouse tracker
+    // Mouse tracker bound to stable mutable ref
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const currentX = e.clientX - rect.left;
       const currentY = e.clientY - rect.top;
-      setMouse((prev) => ({
-        ...prev,
-        targetX: currentX - width / 2,
-        targetY: currentY - height / 2,
-      }));
+      mouseRef.current.targetX = currentX - width / 2;
+      mouseRef.current.targetY = currentY - height / 2;
     };
 
     if (mode === 'hero') {
@@ -115,13 +121,17 @@ export default function InteractiveCanvas({ mode = 'hero' }: InteractiveCanvasPr
     // Render loop
     const render = () => {
       if (!ctx || !canvas) return;
+      if (!isVisibleRef.current) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
 
       // Deep dark clear with a slight radial shadow
       ctx.clearRect(0, 0, width, height);
 
       // Smooth mouse tracking
-      curMouseX += (mouse.targetX - curMouseX) * 0.05;
-      curMouseY += (mouse.targetY - curMouseY) * 0.05;
+      curMouseX += (mouseRef.current.targetX - curMouseX) * 0.05;
+      curMouseY += (mouseRef.current.targetY - curMouseY) * 0.05;
 
       // Base dynamic rotational offset based on mouse location
       const dynamicAngleX = angleX + curMouseY * 0.00005;
@@ -323,13 +333,14 @@ export default function InteractiveCanvas({ mode = 'hero' }: InteractiveCanvasPr
     render();
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
       if (mode === 'hero') {
         window.removeEventListener('mousemove', handleMouseMove);
       }
     };
-  }, [mode, mouse.targetX, mouse.targetY]);
+  }, [mode]);
 
   return (
     <canvas

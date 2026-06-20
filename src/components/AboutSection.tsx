@@ -1,9 +1,47 @@
-import React from 'react';
-import { Target, Award, Shield, Cpu, BookOpen, Send, UserCheck } from 'lucide-react';
-// @ts-ignore
-import portraitImg from '../assets/images/mohd_tahir_cartoon_portrait_1781852370555.jpg';
+import React, { useState } from 'react';
+import { Target, Award, Shield, Cpu, BookOpen, Send, UserCheck, Terminal, FileCode, Braces, Settings, Activity } from 'lucide-react';
 
 export default function AboutSection() {
+  const [activeTab, setActiveTab] = useState<'agent' | 'stack' | 'status'>('agent');
+
+  const configTabs = {
+    agent: {
+      filename: 'Agent.ts',
+      icon: <FileCode className="w-3.5 h-3.5 text-purple-400 font-bold" />,
+      code: [
+        { label: 'class', text: ' AIAgent {', color: 'text-purple-400' },
+        { label: '  name:', text: ' "Mohd Tahir"', color: 'text-emerald-400 font-semibold' },
+        { label: '  role:', text: ' "AI Architect"', color: 'text-indigo-400 font-semibold' },
+        { label: '  xp:', text: ' "+3 Years"', color: 'text-amber-400 font-semibold' },
+        { label: '  focus:', text: ' ["Automation", "Web"]', color: 'text-blue-400' },
+        { label: '  status:', text: ' "Active_Online"', color: 'text-pink-400 font-semibold' },
+        { label: '}', text: '', color: 'text-purple-400' },
+      ]
+    },
+    stack: {
+      filename: 'Stack.json',
+      icon: <Braces className="w-3.5 h-3.5 text-indigo-400 font-bold" />,
+      code: [
+        { label: '  frontend:', text: ' ["React", "TS", "Twin"]', color: 'text-purple-400' },
+        { label: '  backend:', text: ' ["Node", "Express"]', color: 'text-indigo-400' },
+        { label: '  ai_models:', text: ' ["Gemini", "OpenAI"]', color: 'text-emerald-400' },
+        { label: '  nocode:', text: ' ["Make", "n8n"]', color: 'text-blue-400' },
+        { label: '  design:', text: ' ["Figma", "PS"]', color: 'text-pink-400' },
+      ]
+    },
+    status: {
+      filename: 'Status.sh',
+      icon: <Terminal className="w-3.5 h-3.5 text-emerald-400 font-bold" />,
+      code: [
+        { label: '  $ ', text: 'systemctl status agent', color: 'text-gray-400 font-mono' },
+        { label: '  ▶ ', text: 'Active: active (online)', color: 'text-emerald-400 font-bold' },
+        { label: '  ▶ ', text: 'Uptime: 99.98% / SLA', color: 'text-blue-400' },
+        { label: '  ▶ ', text: 'Deployment: SLA_VERIFIED', color: 'text-purple-400 font-bold' },
+        { label: '  ▶ ', text: 'LCP_Metric: 95% Optimized', color: 'text-amber-400' },
+      ]
+    }
+  };
+
   const pillars = [
     {
       icon: <Cpu className="w-6 h-6 text-purple-400" />,
@@ -47,48 +85,75 @@ export default function AboutSection() {
         {/* Bento Grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
-          {/* Column 1: Portrait Panel (col-span-4) */}
-          <div className="lg:col-span-4 flex flex-col justify-between glass-panel p-4 rounded-3xl relative overflow-hidden group select-none">
-            {/* Visual scanlines context */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,10,36,0)_98%,rgba(168,85,247,0.05)_2%)] bg-[size:100%_4px] opacity-15 pointer-events-none z-20" />
+          {/* Column 1: System Config Terminal (col-span-4) - Completely Faceless Tech Display */}
+          <div className="lg:col-span-4 flex flex-col justify-between glass-panel p-5 rounded-3xl relative overflow-hidden group select-none">
+            {/* Ambient code background layout glow */}
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-purple-500/5 to-transparent pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-bl-full pointer-events-none" />
             
-            {/* Image frame */}
-            <div className="relative w-full h-[380px] sm:h-[420px] lg:h-[450px] rounded-2xl overflow-hidden bg-[#0a0518] border border-purple-500/20 group-hover:border-purple-500/40 transition-colors duration-500 shadow-inner">
-              <img
-                src={portraitImg}
-                alt="Mohd Tahir Portrait"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover group-hover:scale-[1.03] duration-500 transition-transform ease-out"
-              />
-              
-              {/* Overlay glass tint */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#03000b]/90 via-transparent to-purple-500/5 pointer-events-none z-10" />
+            <div className="w-full flex-1 flex flex-col">
+              {/* Terminal Title Header */}
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-purple-500/10">
+                <span className="font-mono text-[9px] text-purple-400 font-bold uppercase tracking-widest flex items-center space-x-1.5">
+                  <Terminal className="w-3 h-3 animate-pulse text-purple-400" />
+                  <span>Interactive Workspace</span>
+                </span>
+                <span className="font-mono text-[8px] text-gray-500">v3.4.15</span>
+              </div>
 
-              {/* Verified Badge */}
-              <span className="absolute top-3 left-3 bg-[#030012]/80 backdrop-blur-md border border-purple-500/30 px-2.5 py-1 rounded-md font-mono text-[8px] text-purple-300 uppercase tracking-widest z-15 select-none shadow-sm flex items-center space-x-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                <span>VERIFIED REPRESENATIVE</span>
-              </span>
+              {/* IDE Tabs */}
+              <div className="flex items-center space-x-1.5 mb-3 bg-black/45 p-1.5 rounded-lg border border-purple-500/5">
+                {(Object.keys(configTabs) as Array<keyof typeof configTabs>).map((tabKey) => {
+                  const t = configTabs[tabKey];
+                  const active = activeTab === tabKey;
+                  return (
+                    <button
+                      key={tabKey}
+                      onClick={() => setActiveTab(tabKey)}
+                      className={`flex-1 flex items-center justify-center space-x-1.5 py-1.5 px-2 rounded-md font-mono text-[9px] uppercase tracking-wider transition-all duration-300 ${
+                        active
+                          ? 'bg-purple-500/15 border border-purple-500/30 text-white font-bold shadow-md'
+                          : 'text-gray-500 hover:text-gray-300 hover:bg-purple-500/5 border border-transparent'
+                      }`}
+                    >
+                      {t.icon}
+                      <span>{t.filename}</span>
+                    </button>
+                  );
+                })}
+              </div>
 
-              {/* Corner metadata label */}
-              <span className="absolute top-3 right-3 bg-[#030012]/80 backdrop-blur-md border border-purple-500/30 px-2.5 py-1 rounded-md font-mono text-[8px] text-purple-400 uppercase tracking-widest z-15 select-none shadow-sm flex items-center space-x-1">
-                <UserCheck className="w-2.5 h-2.5 text-purple-400" />
-                <span>MT_ID_303</span>
-              </span>
-
-              {/* Identity Strip */}
-              <div className="absolute bottom-3 left-3 right-3 z-15 bg-[#03000f]/90 backdrop-blur-md border border-purple-500/20 p-3 rounded-xl flex items-center justify-between shadow-lg">
-                <div className="text-left">
-                  <span className="font-mono text-[7px] text-purple-400 tracking-widest uppercase font-bold">REPRESENTATIVE</span>
-                  <h4 className="font-display font-extrabold text-[12px] text-white uppercase tracking-wider">MOHD TAHIR</h4>
-                </div>
-                <div className="text-right flex flex-col items-end">
-                  <span className="font-mono text-[7px] text-gray-400 tracking-widest uppercase">DISCIPLINE</span>
-                  <span className="font-mono text-[8px] text-indigo-400 uppercase font-bold tracking-wider">
-                    AI ARCHITECT
-                  </span>
+              {/* Code window */}
+              <div className="relative flex-1 min-h-[300px] bg-black/60 border border-purple-500/15 rounded-xl p-4 font-mono text-[10.5px] leading-relaxed text-left overflow-auto group-hover:border-purple-500/35 transition-colors duration-500">
+                {/* Visual scanlines context */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(18,10,36,0)_98%,rgba(168,85,247,0.03)_2%)] bg-[size:100%_4px] opacity-20 pointer-events-none z-10" />
+                
+                <div className="space-y-2 relative z-10">
+                  {configTabs[activeTab].code.map((line, idx) => (
+                    <div key={idx} className="flex items-start">
+                      <span className="text-purple-500/30 text-right w-6 pr-2 select-none text-[9px] border-r border-purple-500/5 mr-3">
+                        {idx + 1}
+                      </span>
+                      <div className="flex-1 whitespace-pre-wrap">
+                        <span className="text-purple-400 font-semibold">{line.label}</span>
+                        <span className={line.color}>{line.text}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+            </div>
+
+            {/* Quick Metrics Strip */}
+            <div className="mt-4 pt-4 border-t border-purple-500/10 flex items-center justify-between">
+              <div className="flex items-center space-x-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-mono text-[8px] text-gray-400 uppercase tracking-widest font-bold">NODE_HEALTH // STABLE</span>
+              </div>
+              <span className="font-mono text-[8px] text-purple-400 font-bold uppercase tracking-widest flex items-center space-x-1">
+                <Activity className="w-3.5 h-3.5 text-purple-400" />
+                <span>MT_SYSTEM_LIVE</span>
+              </span>
             </div>
           </div>
           

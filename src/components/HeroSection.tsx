@@ -15,15 +15,19 @@ export default function HeroSection() {
   ]);
 
   useEffect(() => {
+    let timeoutId: number;
     const interval = setInterval(() => {
       setAnimateState('fade-out');
-      setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         setRoleIndex((prev) => (prev + 1) % HERO_ROLES.length);
         setAnimateState('fade-in');
       }, 500); // fade out length
     }, 4000); // item frequency
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
@@ -166,12 +170,12 @@ export default function HeroSection() {
                 className="px-6 py-3.5 font-semibold text-gray-300 hover:text-white text-xs tracking-[0.12em] uppercase rounded-xl bg-purple-500/5 hover:bg-purple-500/10 border border-purple-500/10 hover:border-purple-500/20 transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <Award className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Skills Training</span>
+                <span>Skills Training + Admission Registrations</span>
               </button>
             </div>
 
             {/* Stats list */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full mt-12 pt-8 border-t border-purple-500/10">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-x-4 gap-y-6 w-full mt-12 pt-8 border-t border-purple-500/10">
               {STATS.map((st, i) => (
                 <div key={i} className="flex flex-col relative group">
                   <span className="font-mono text-[8px] text-purple-400 tracking-widest uppercase font-bold">
@@ -208,72 +212,51 @@ export default function HeroSection() {
               {/* Overlay scanlines context */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(18,10,36,0)_98%,rgba(168,85,247,0.05)_2%)] bg-[size:100%_4px] opacity-20 pointer-events-none z-20" />
 
-              {/* Live Interactive Developer Console Terminal */}
-              <div className="relative w-full h-full rounded-[24px] overflow-hidden bg-[#0a0518]/90 border border-purple-500/30 p-5 flex flex-col justify-between font-mono">
-                {/* Visual grid lining subtle */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.015)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
-                
-                {/* Inner Glow effect */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+              {/* Crop portrait photo */}
+              <div className="relative w-full h-full rounded-[24px] overflow-hidden bg-[#0a0518] border border-purple-500/10">
+                <img
+                  src="https://i.ibb.co/gZZ9wwKN/65ea38ef-8e26-49d9-a5ed-b61b6e1ac222.jpg"
+                  alt="Mohd Tahir Professional Portrait"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
 
-                {/* Top header navigation indicators */}
-                <div className="flex items-center justify-between border-b border-purple-500/25 pb-3.5 z-10">
-                  <div className="flex items-center space-x-1.5">
-                    <span className="w-2 h-2 rounded-full bg-red-500/60" />
-                    <span className="w-2 h-2 rounded-full bg-amber-500/60" />
-                    <span className="w-2 h-2 rounded-full bg-green-500/60 animate-pulse" />
-                  </div>
-                  <span className="text-[8px] uppercase tracking-[0.15em] text-purple-300 font-bold flex items-center space-x-1">
-                    <Terminal className="w-3 h-3 text-purple-400" />
-                    <span>SYS_WORKSPACE</span>
-                  </span>
-                </div>
+                {/* Cyber glass tint panel */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#03000b] via-transparent to-purple-500/5 pointer-events-none z-10" />
 
-                {/* Automation dashboard details */}
-                <div className="my-3 flex-1 flex flex-col justify-start z-10 text-left">
-                  <div className="mb-3.5 bg-purple-500/5 border border-purple-500/10 rounded-xl p-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[8px] text-gray-400 font-bold tracking-wider uppercase">CORE_STATUS</span>
-                      <span className="text-[8px] text-emerald-400 font-bold uppercase tracking-widest flex items-center space-x-1">
-                        <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping mr-1" />
-                        ACTIVE
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-purple-200 leading-snug">
-                      <span>⚡ Mohd Tahir // AI Architect</span>
-                    </div>
-                  </div>
+                {/* Floating Telemetry Overlays */}
+                <span className="absolute top-3 left-3 bg-[#03000b]/85 border border-purple-500/30 px-2.5 py-1 rounded-md font-mono text-[8px] text-purple-300 uppercase tracking-widest z-15 select-none shadow-sm flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>WORKSPACE_ONLINE</span>
+                </span>
 
-                  {/* Log stream with fading lines */}
-                  <span className="text-[8px] text-purple-400 uppercase tracking-widest font-bold mb-1.5 block">
-                    LIVE AUTOMATION STREAM:
-                  </span>
-                  <div className="flex-1 bg-black/45 border border-purple-500/15 p-2.5 rounded-lg space-y-1.5 min-h-[142px] flex flex-col justify-end overflow-hidden">
-                    {consoleLogs.map((log, i) => (
-                      <div
-                        key={i}
-                        className={`text-[9.5px] leading-tight font-mono whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 ${
-                          i === consoleLogs.length - 1
-                            ? 'text-emerald-400 font-semibold pl-1.5 border-l border-emerald-400/50'
-                            : 'text-gray-400'
-                        }`}
-                      >
-                        <span className="text-purple-400/80 select-none mr-1.5">&gt;</span>
-                        {log}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <span className="absolute top-3 right-3 bg-[#03000b]/85 border border-purple-500/30 px-2.5 py-1 rounded-md font-mono text-[8px] text-[#f3f4f6] uppercase tracking-widest z-15 select-none shadow-sm flex items-center space-x-1">
+                  <Terminal className="w-2.5 h-2.5 text-purple-400" />
+                  <span>SYS_LIVE</span>
+                </span>
 
-                {/* Bottom Stats Grid */}
-                <div className="grid grid-cols-2 gap-2 border-t border-purple-500/20 pt-3 z-10">
-                  <div className="bg-purple-950/20 border border-purple-500/10 p-2 rounded-lg text-left">
-                    <span className="text-[7px] text-gray-400 uppercase tracking-widest block font-bold">LATENCY</span>
-                    <span className="text-[10px] text-white font-bold mt-0.5 block">14ms average</span>
+                {/* Academic Quick Admission Button */}
+                <button
+                  onClick={() => handleScrollTo('workshop')}
+                  className="absolute bottom-20 left-4 right-4 z-20 py-2.5 bg-purple-600/90 hover:bg-purple-500 border border-purple-400/50 rounded-xl text-center font-mono text-[8.5px] font-black text-white uppercase tracking-widest shadow-[0_4px_12px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_20px_rgba(168,85,247,0.6)] transition-all duration-350 hover:scale-[1.02] active:scale-[0.97] cursor-pointer flex items-center justify-center space-x-1.5"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-purple-200 animate-pulse" />
+                  <span>Skill Training + Registrations Open</span>
+                  <ArrowRight className="w-3 h-3 text-purple-100" />
+                </button>
+
+                {/* Identity Strip at bottom inside portrait frame */}
+                <div className="absolute bottom-4 left-4 right-4 z-15 bg-[#03000b]/85 backdrop-blur-md border border-purple-500/20 p-3.5 rounded-xl flex items-center justify-between shadow-lg">
+                  <div className="text-left">
+                    <span className="font-mono text-[7px] text-purple-400 tracking-widest uppercase font-bold">REPRESENTATIVE</span>
+                    <h3 className="font-display font-extrabold text-[13px] text-white uppercase tracking-wider">MOHD TAHIR</h3>
                   </div>
-                  <div className="bg-purple-950/20 border border-purple-500/10 p-2 rounded-lg text-left">
-                    <span className="text-[7px] text-gray-400 uppercase tracking-widest block font-bold">ENGINE</span>
-                    <span className="text-[10px] text-purple-300 font-bold mt-0.5 block">Gemini API</span>
+                  <div className="text-right flex flex-col items-end">
+                    <span className="font-mono text-[7px] text-gray-400 tracking-widest uppercase">DISCIPLINE</span>
+                    <span className="font-mono text-[8px] text-emerald-400 uppercase font-black tracking-wider flex items-center space-x-1">
+                      <Cpu className="w-3 h-3 text-emerald-400" />
+                      <span>AI ARCHITECT</span>
+                    </span>
                   </div>
                 </div>
               </div>

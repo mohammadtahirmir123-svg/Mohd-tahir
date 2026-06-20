@@ -26,7 +26,7 @@ export default function ContactSection() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       return;
@@ -34,12 +34,29 @@ export default function ContactSection() {
 
     setIsSubmitting(true);
 
-    // Simulate reliable pipeline sync
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', service: 'Web Development', message: '' });
-    }, 1800);
+    try {
+      await fetch('/api/notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'contact',
+          name: formData.name,
+          email: formData.email,
+          details: {
+            service: formData.service,
+            message: formData.message,
+          }
+        })
+      });
+    } catch (err) {
+      console.error("Failed to post notification lead:", err);
+    }
+
+    setIsSubmitting(false);
+    setSubmitStatus('success');
+    setFormData({ name: '', email: '', service: 'Web Development', message: '' });
   };
 
   return (
@@ -103,8 +120,8 @@ export default function ContactSection() {
                     </div>
                     <div>
                       <span className="font-mono text-[9px] text-gray-500 uppercase tracking-widest block">TELECOMMUNICATIONS</span>
-                      <a href="https://wa.me/917889396349" className="text-white hover:text-purple-300 font-medium text-xs sm:text-sm mt-0.5 transition-colors block">
-                        +91 78893 96349
+                      <a href="https://wa.me/916005820321" className="text-white hover:text-purple-300 font-medium text-xs sm:text-sm mt-0.5 transition-colors block">
+                        +91 60058 20321
                       </a>
                     </div>
                   </div>
@@ -150,6 +167,15 @@ export default function ContactSection() {
                     <ExternalLink className="w-3.5 h-3.5 text-purple-400 group-hover:translate-x-0.5 transition-transform" />
                   </a>
                   <a
+                    href="https://instagram.com/1amtahir"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-xl bg-purple-500/5 hover:bg-purple-500/10 border border-purple-500/10 hover:border-purple-500/30 flex items-center justify-between text-xs font-semibold text-gray-300 hover:text-white transition-all group"
+                  >
+                    <span>Instagram</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-purple-400 group-hover:translate-x-0.5 transition-transform" />
+                  </a>
+                  <a
                     href="https://linkedin.com"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -188,7 +214,7 @@ export default function ContactSection() {
                   </h3>
                   
                   <p className="text-gray-300 text-xs sm:text-sm mt-3 max-w-sm mx-auto font-light leading-relaxed">
-                    Thank you! Your consultation credentials have successfully reached Mohd Tahir. You will receive a direct briefing response within 24 hours.
+                    Thank you! Your request was sent instantly to Mohammad Tahir's contact via SMS and Email. He receives these alerts within 1 second and will respond to you right away!
                   </p>
 
                   <button

@@ -11,10 +11,12 @@ export const HERO_ROLES = [
 ];
 
 export const STATS = [
-  { value: '3+', label: 'Years Experience', marker: 'EXPERIENCE' },
-  { value: '100+', label: 'Projects Completed', marker: 'DELIVERED' },
-  { value: '50+', label: 'Students Trained', marker: 'EDUCATION' },
-  { value: 'Global', label: 'Freelance Coverage', marker: 'LOCATION' },
+  { value: '3+ Yrs', label: 'Tech Experience', marker: 'EXPERIENCE' },
+  { value: '2+ Yrs', label: 'Trading Experience', marker: 'TRADING' },
+  { value: '500+', label: 'Projects Completed', marker: 'DELIVERED' },
+  { value: '20+', label: 'Apps Built', marker: 'DEVELOPED' },
+  { value: '50+', label: 'Websites Designed', marker: 'DESIGNED' },
+  { value: '100+', label: 'People Trained', marker: 'EDUCATION' },
 ];
 
 export const TIMELINE: TimelineEvent[] = [
@@ -23,7 +25,7 @@ export const TIMELINE: TimelineEvent[] = [
     year: '2023 - Present',
     title: 'Elite Freelance Consultant & Full-Stack Developer',
     organization: 'Upwork & Fiverr Platforms',
-    description: 'Developed over 100+ high-converting websites and landing pages for international businesses. Specialized in Next.js, React, tailwind configurations, WordPress, Shopify, and Webflow custom design integrations.',
+    description: 'Developed over 50+ websites and 20+ fully responsive applications as part of 500+ successful digital projects completed for client partners globally.',
     type: 'Freelance',
   },
   {
@@ -39,7 +41,7 @@ export const TIMELINE: TimelineEvent[] = [
     year: '2023 - Present',
     title: 'Lead Digital Educator & Coach',
     organization: 'Digital Academy Initiative',
-    description: 'Trained 50+ students on Web Design, MS Office suites, Freelancing setup, and Client Acquisition pathways to empower sustainable remote works.',
+    description: 'Trained over 100+ individuals on Web Design, MS Office suites, Freelancing setup, and Client Acquisition pathways to empower sustainable remote works.',
     type: 'Education',
   },
 ];
@@ -111,9 +113,9 @@ export const SERVICES: Service[] = [
   },
   {
     id: 's6',
-    title: 'Digital Skills Training',
+    title: 'Digital Skills Training + Admission Registrations',
     iconName: 'Award',
-    description: 'Comprehensive practical training programs to learn highly valuable, monetizable modern skills.',
+    description: 'Comprehensive practical training programs paired with live credential registrations to validate modern skills.',
     details: ['Live portfolio-guided assignments', 'Online earning pathways', 'Upwork & Fiverr algorithm mechanics', 'Direct client closing scripts'],
   },
   {
