@@ -1,7 +1,44 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRight, Sparkles, MessageSquare, Briefcase, ChevronDown, Cpu, Award, Terminal, Shield } from 'lucide-react';
+import { ArrowRight, Sparkles, MessageSquare, Briefcase, ChevronDown, Cpu, Award, Terminal, Shield, GraduationCap } from 'lucide-react';
+import { motion, animate, useInView } from 'motion/react';
 import InteractiveCanvas from './InteractiveCanvas';
 import { HERO_ROLES, STATS } from '../data';
+
+function AnimatedCounter({ value, subtitle, delay = 0 }: { value: string, subtitle: string, delay?: number }) {
+  const nodeRef = useRef<HTMLSpanElement>(null);
+  const inView = useInView(nodeRef, { once: true, margin: "-50px" });
+  
+  useEffect(() => {
+    if (inView && nodeRef.current) {
+      // Find numbers in the string
+      const numMatch = value.match(/\d+/);
+      if (numMatch) {
+        const num = parseInt(numMatch[0], 10);
+        const prefix = value.substring(0, numMatch.index);
+        const suffix = value.substring(numMatch.index! + numMatch[0].length);
+        
+        animate(0, num, {
+          duration: 2,
+          delay: delay,
+          ease: "easeOut",
+          onUpdate: (latest) => {
+            if (nodeRef.current) {
+              nodeRef.current.textContent = `${prefix}${Math.floor(latest)}${suffix}`;
+            }
+          }
+        });
+      } else {
+        nodeRef.current.textContent = value;
+      }
+    }
+  }, [inView, value, delay]);
+
+  return (
+    <span ref={nodeRef} className="font-display font-extrabold text-2xl text-white mt-0.5 tracking-tight group-hover:text-purple-300 transition-colors">
+      0
+    </span>
+  );
+}
 
 export default function HeroSection() {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -111,18 +148,13 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Mission text & CTAs */}
-          <div className="lg:col-span-7 flex flex-col text-left items-start">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            className="lg:col-span-7 flex flex-col text-left items-start"
+          >
             
-            {/* Elite Badge */}
-            <div
-              className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6 backdrop-blur-md animate-pulse"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-              <span className="font-mono text-[9px] uppercase text-purple-300 font-bold tracking-[0.25em]">
-                Elite Full-Stack Design & AI Automation
-              </span>
-            </div>
-
             {/* Main heading */}
             <h1 className="font-display font-extrabold text-4xl sm:text-6xl lg:text-7xl tracking-tighter text-white uppercase leading-[0.9]">
               <span className="block drop-shadow-[0_0_15px_rgba(255,255,255,0.05)]">
@@ -164,37 +196,73 @@ export default function HeroSection() {
                 <Briefcase className="w-3.5 h-3.5 text-purple-400" />
                 <span>Core Portfolio</span>
               </button>
-
-              <button
-                onClick={() => handleScrollTo('workshop')}
-                className="px-6 py-3.5 font-semibold text-gray-300 hover:text-white text-xs tracking-[0.12em] uppercase rounded-xl bg-purple-500/5 hover:bg-purple-500/10 border border-purple-500/10 hover:border-purple-500/20 transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer"
-              >
-                <Award className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Skills Training + Admission Registrations</span>
-              </button>
             </div>
+
+            {/* Dynamic Ultimate Academy Admission Registration Trigger Panel */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              onClick={() => window.dispatchEvent(new CustomEvent('open-admission-modal'))}
+              className="mt-6 p-4 py-3.5 rounded-2xl bg-[#0a0521]/90 hover:bg-[#110935]/95 border border-purple-500/25 hover:border-purple-400/50 transition-all duration-300 max-w-lg w-full cursor-pointer flex items-center justify-between group shadow-[0_0_15px_rgba(168,85,247,0.06)] hover:shadow-[0_0_30px_rgba(168,85,247,0.22)] relative overflow-hidden select-none"
+            >
+              {/* Internal absolute bottom high-fidelity neon accent line */}
+              <div className="absolute inset-x-0 bottom-0 h-[2.5px] bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 opacity-60" />
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full blur-xl pointer-events-none" />
+
+              <div className="flex items-center space-x-4 relative z-10 text-left">
+                {/* Advanced Ultimate 3D-feeling Graduation Icon Core with ring animations */}
+                <div className="relative w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/30 to-pink-500/10 opacity-100" />
+                  <GraduationCap className="w-5 h-5 text-purple-200 relative z-10 group-hover:text-white transition-colors" />
+                </div>
+                
+                <div>
+                  <h4 className="font-display font-extrabold text-xs sm:text-sm text-white tracking-wider uppercase transition-colors group-hover:text-purple-300">
+                    ACADEMY ADMISSION
+                  </h4>
+                </div>
+              </div>
+
+              {/* Action pill trigger */}
+              <div className="flex items-center space-x-1 relative z-10 shrink-0">
+                <span className="font-mono text-[8.5px] font-black tracking-widest uppercase text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 px-3 py-1 rounded-md shadow-md border border-white/10 group-hover:from-purple-500 group-hover:to-pink-500 transition-all">
+                  APPLY NOW
+                </span>
+                <ArrowRight className="w-3.5 h-3.5 text-purple-400 group-hover:translate-x-1.5 transition-transform" />
+              </div>
+            </motion.div>
 
             {/* Stats list */}
             <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-x-4 gap-y-6 w-full mt-12 pt-8 border-t border-purple-500/10">
               {STATS.map((st, i) => (
-                <div key={i} className="flex flex-col relative group">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 + (i * 0.1) }}
+                  key={i} 
+                  className="flex flex-col relative group"
+                >
                   <span className="font-mono text-[8px] text-purple-400 tracking-widest uppercase font-bold">
                     {st.marker}
                   </span>
-                  <span className="font-display font-extrabold text-2xl text-white mt-0.5 tracking-tight group-hover:text-purple-300 transition-colors">
-                    {st.value}
-                  </span>
+                  <AnimatedCounter value={st.value} subtitle={st.label} delay={1.0 + (i * 0.1)} />
                   <span className="font-sans text-[10px] text-gray-400 font-light mt-0.5">
                     {st.label}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
 
-          </div>
+          </motion.div>
 
           {/* Right Column: Extreme Studio-Edited Professional Bento Interactive Card (5 wide) */}
-          <div className="lg:col-span-5 flex items-center justify-center relative w-full h-full min-h-[400px] sm:min-h-[500px]">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
+            className="lg:col-span-5 flex items-center justify-center relative w-full h-full min-h-[400px] sm:min-h-[500px]"
+          >
             
             {/* Behind halo glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-transparent rounded-[40px] blur-3xl pointer-events-none scale-90 z-0" />
@@ -235,16 +303,6 @@ export default function HeroSection() {
                   <span>SYS_LIVE</span>
                 </span>
 
-                {/* Academic Quick Admission Button */}
-                <button
-                  onClick={() => handleScrollTo('workshop')}
-                  className="absolute bottom-20 left-4 right-4 z-20 py-2.5 bg-purple-600/90 hover:bg-purple-500 border border-purple-400/50 rounded-xl text-center font-mono text-[8.5px] font-black text-white uppercase tracking-widest shadow-[0_4px_12px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_20px_rgba(168,85,247,0.6)] transition-all duration-350 hover:scale-[1.02] active:scale-[0.97] cursor-pointer flex items-center justify-center space-x-1.5"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-purple-200 animate-pulse" />
-                  <span>Skill Training + Registrations Open</span>
-                  <ArrowRight className="w-3 h-3 text-purple-100" />
-                </button>
-
                 {/* Identity Strip at bottom inside portrait frame */}
                 <div className="absolute bottom-4 left-4 right-4 z-15 bg-[#03000b]/85 backdrop-blur-md border border-purple-500/20 p-3.5 rounded-xl flex items-center justify-between shadow-lg">
                   <div className="text-left">
@@ -262,17 +320,17 @@ export default function HeroSection() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
 
         {/* Scroll Indicator */}
         <div
-          onClick={() => handleScrollTo('about')}
+          onClick={() => handleScrollTo('portfolio')}
           className="flex flex-col items-center mt-12 cursor-pointer opacity-50 hover:opacity-100 transition-opacity duration-300 pointer-events-auto sm:hidden"
         >
           <span className="font-mono text-[8px] tracking-widest uppercase text-gray-500 mb-1">
-            DISCOVER THE JOURNEY
+            VIEW PORTFOLIO
           </span>
           <ChevronDown className="w-3.5 h-3.5 text-purple-400 animate-bounce" />
         </div>

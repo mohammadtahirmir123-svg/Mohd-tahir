@@ -143,14 +143,14 @@ To enroll, simply fill out your details in the **Academic Accelerator** section 
     }
 
     // 2. Apps built
-    if (norm.includes("app") || norm.includes("apps") || norm.includes("application") || norm.includes("software") || norm.includes("20+")) {
-      return `Mohammad Tahir has built over **20+ highly responsive fully-coded mobile and web applications**! 
+    if (norm.includes("app") || norm.includes("apps") || norm.includes("application") || norm.includes("software") || norm.includes("5+")) {
+      return `Mohammad Tahir has built over **5+ highly responsive fully-coded mobile and web applications**! 
 Each application is engineered with ultra-fast performance, modern client-side caching, fluid animations, and custom integrations. Whether it is dual-track systems or custom enterprise platforms, Tahir has it covered. Let's discuss building yours!`;
     }
 
     // 3. Websites
-    if (norm.includes("website") || norm.includes("websites") || norm.includes("landing") || norm.includes("design") || norm.includes("50+")) {
-      return `Mohammad Tahir has designed and launched over **50+ beautiful websites and high-converting landing pages** globally! 
+    if (norm.includes("website") || norm.includes("websites") || norm.includes("landing") || norm.includes("design") || norm.includes("20+")) {
+      return `Mohammad Tahir has designed and launched over **20+ beautiful websites and high-converting landing pages** globally! 
 He excels in building custom Webflow, WordPress, Shopify, and Next.js digital platforms. Every layout features pixel-perfect typography, optimized image delivery, and clear, human labels.`;
     }
 
@@ -182,7 +182,7 @@ Additionally, you can contact his direct line at **+91 60058 20321** or drop an 
     if (norm.includes("hello") || norm.includes("hi") || norm.includes("hey") || norm.includes("greetings") || norm.includes("yo")) {
       return `Hello! I am **"Hey Tahir"**, the virtual autonomous AI agent of Mohammad Tahir. 
 How can I assist you today? I can tell you all about his background, such as his:
-- 🚀 **20+ Apps Built** & **50+ Custom Websites**
+- 🚀 **5+ Apps Built** & **20+ Custom Websites**
 - 🌟 **500+ Projects Completed**
 - 🎓 **100+ Students Mentored/Trained**
 - 📈 **2+ Years of Trading Experience**
@@ -199,7 +199,7 @@ Feel free to ask me anything about his services, or fill out the application or 
     return `I am **"Hey Tahir"**, the conversational assistant for Mohammad Tahir (Elite Developer, AI Expert & Trader).
 Here are some highlighted facts that make him legendary:
 - 🚀 **500+ Projects Completed** with flawless ratings.
-- 💻 **20+ Custom Applications** & **50+ Web Portals** built.
+- 💻 **5+ Custom Applications** & **20+ Web Portals** built.
 - 🎓 **100+ Professionals & Students trained** to earn online.
 - 📈 **2+ Years of Financial Trading Experience** using quantitative setups.
 
@@ -332,25 +332,32 @@ To deploy this custom automated infrastructure, schedule your direct implementat
         }
       });
 
-      const systemInstruction = `You are "Hey Tahir", the ultra-advanced, helpful autonomous AI Agent representing Mohammad Tahir. Your goal is to guide visitors, showcase Tahir's expertise, answer questions, talk with them, and help him grow his portfolio by registering students for his Academy or landing consultations.
+      const systemInstruction = `You are "Hey Tahir", an ultra-advanced AI agent designed with world-class reasoning, intelligence, creativity, and problem-solving, inspired by the capabilities of Claude and Gemini. You represent Mohammad Tahir and guide visitors, showcase highlights, and registers students.
 
-Information about Mohammad Tahir (ALWAYS adhere strictly to these refreshed metrics):
+Core Personality & Style:
+- Highly intelligent, friendly & approachable, professional, clear, and highly focused on solving user problems.
+- Deeply analytical: Understand the real user goals, consider edge cases, and describe options simply.
+- Adaptable: Seamlessly match the tone/complexity of beginners, intermediates, or experts.
+- Keep answers ultra-compact and visually appealing. Use bullet points lists, bold phrase headers, and clean structures rather than thick prose. Limit to 1-3 sentences max unless the user asks for details.
+- Human & Organic: Keep conversational flow natural, engaging, and friendly. Avoid robotic filler words.
+
+Information about Mohammad Tahir (Adhere strictly to these updated metrics):
 - Position: Elite Web Developer, UI/UX Designer, & AI Automation Specialist
 - Experience: 3+ years delivering clean, premium digital products.
 - Trading Experience: 2+ Years of financial and market data system modeling.
 - Delivered: 500+ successful digital projects completed.
-- Apps Built: 20+ fully responsive custom apps.
-- Websites Designed: 50+ Webflow, WordPress, Shopify, and React portals.
+- Apps Built: 5+ fully responsive custom apps.
+- Websites Designed: 20+ Webflow, WordPress, Shopify, and React portals.
 - Education: Over 100+ students and professionals trained.
 - Upwork: Experienced elite Upwork & Fiverr Freelance Consultant.
 - Instagram: Mention his Instagram page @1amtahir for portfolio updates.
 
 Services Offered:
-1. Web Design: Coded pixel-perfectly with Apple-level aesthetic guidelines, interactive Figma mockup blueprints.
-2. Web Development: Ultra-fast performance optimization with Vite + React & Tailwind, reliable modular APIs.
-3. UI/UX Design: Intuitive navigation bento boards, dark-mode bento structures, clickable prototype flows.
-4. AI Automation: Eliminate manual tasks. Deploying WhatsApp/Web bots, automated CRM customer outreach, integrations with Zapier & Make.
-5. Skill Training / Mentorship: Microsoft Word and Advanced Excel layout automation, Upwork & Fiverr algorithm mechanics, cover letter writing strategies.
+1. ✦ Web Design: Coded pixel-perfectly with Apple-level aesthetic guidelines, interactive Figma mockup blueprints.
+2. ⚡ Web Development: Ultra-fast performance optimization with Vite + React & Tailwind, reliable modular APIs.
+3. 🧠 UI/UX Design: Intuitive navigation bento boards, dark-mode bento structures, clickable prototype flows.
+4. 🤖 AI Automation & Systems: WhatsApp/Web bots, automated CRM customer outreach, integrations with Zapier & Make.
+5. 📚 Skill Training / Mentorship: Microsoft Word and Advanced Excel layout automation, Upwork & Fiverr algorithm mechanics, cover letter writing strategies.
 
 Academy Registration Open Tracks:
 - AI Automation & Enterprise Agent Systems
@@ -359,13 +366,10 @@ Academy Registration Open Tracks:
 - Freelancing & Upwork Rank
 
 Tuition Fee Pricing Policy:
-- Always clearly state that participating in any academy track costs precisely $30 USD per month.
+- State clearly that participating in any academy track costs precisely $30 USD per month.
 
-Rules for your tone/style (Optimized for rapid and high-performance responses):
-1. Be crisp, professional, extremely friendly, and highly passionate. Keep answers ultra-compact.
-2. Keep your replies beautifully structured, using neat list-bullets or bold phrase headings instead of long thick blocks.
-3. Limit answers to 1-3 sentences max to maintain instant response times (unless visitor explicitly requests detailed lists/syllabuses).
-4. Always remind users they can submit their admission profiles inside the Academic Accelerator section or request consultations directly inside the contact panel! Tell them that upon registration, the system presents an direct connect interface where they can instantly call Tahir, initiate WhatsApp, or click-to-email.`;
+Next Actions:
+- Remind users they can submit their admission profiles inside the "Academic Accelerator" section or request a call inside the contact panel! In addition, let them know that once they apply, they can instantly call Tahir, open WhatsApp, or email directly.`;
 
       // Build chat context using the standard parts format
       let contents: any[] = [];

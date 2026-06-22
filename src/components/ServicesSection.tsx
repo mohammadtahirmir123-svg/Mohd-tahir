@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SERVICES } from '../data';
 import * as Icons from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function ServicesSection() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -25,7 +26,13 @@ export default function ServicesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-20"
+        >
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-purple-400 font-bold block mb-3">
             CAPABILITY BLUEPRINTS
           </span>
@@ -36,23 +43,28 @@ export default function ServicesSection() {
             Unifying high-fidelity visual design, robust full-stack development, and autonomous AI automation systems.
           </p>
           <div className="mt-4 h-[2px] w-20 bg-gradient-to-r from-purple-500 via-indigo-500 to-transparent mx-auto" />
-        </div>
+        </motion.div>
 
         {/* Bento Board Service Matrix */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {SERVICES.map((srv) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 perspective-[1000px]">
+          {SERVICES.map((srv, index) => {
             const isHovered = hoveredCard === srv.id;
             const isExpanded = expandedCard === srv.id;
 
             return (
-              <div
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 30, rotateX: 10 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02, rotateY: 5, rotateX: -5, zIndex: 10 }}
                 key={srv.id}
                 onMouseEnter={() => setHoveredCard(srv.id)}
                 onMouseLeave={() => setHoveredCard(null)}
-                className={`glass-panel p-8 rounded-3xl relative overflow-hidden transition-all duration-300 flex flex-col justify-between group cursor-pointer ${
+                className={`glass-panel p-8 rounded-3xl relative overflow-hidden transition-colors duration-300 flex flex-col justify-between group cursor-pointer ${
                   isExpanded 
                     ? 'border-purple-500 bg-purple-950/20 shadow-[0_0_30px_rgba(168,85,247,0.2)] lg:col-span-1' 
-                    : 'hover:border-purple-500/40 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(168,85,247,0.08)]'
+                    : 'hover:border-purple-500/40 hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)]'
                 }`}
                 onClick={() => setExpandedCard(isExpanded ? null : srv.id)}
               >
@@ -117,7 +129,7 @@ export default function ServicesSection() {
                   </span>
                 </div>
 
-              </div>
+              </motion.div>
             );
           })}
         </div>

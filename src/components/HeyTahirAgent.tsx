@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Phone, MessageSquare, Send, Volume2, VolumeX, Mic, MicOff, X, 
   Sparkles, RefreshCw, Bot, User, Wifi, Terminal, ArrowRight, 
-  PhoneOff, HelpCircle, Activity, Play, Check, AlertTriangle, ShieldAlert
+  PhoneOff, HelpCircle, Activity, Play, Check, AlertTriangle, ShieldAlert,
+  Hexagon, Aperture, Brain, Cpu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -11,6 +12,116 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+}
+
+// Custom lightweight high-fidelity markdown element renderer mimicking ChatGPT/Claude
+function formatInlineElements(text: string) {
+  const parts = [];
+  let currentIdx = 0;
+  
+  // Regex mapping **bold**, `code`, and https links
+  const itemRegex = /(\*\*.*?\*\*|`.*?`|https?:\/\/[\w\.\/\?\&\=#\-+]+)/g;
+  let match;
+  
+  while ((match = itemRegex.exec(text)) !== null) {
+    const matchStart = match.index;
+    const matchText = match[0];
+    
+    if (matchStart > currentIdx) {
+      parts.push(text.substring(currentIdx, matchStart));
+    }
+    
+    if (matchText.startsWith('**') && matchText.endsWith('**')) {
+      parts.push(
+        <strong className="font-bold text-white text-[11px] tracking-normal" key={matchStart}>
+          {matchText.slice(2, -2)}
+        </strong>
+      );
+    } else if (matchText.startsWith('`') && matchText.endsWith('`')) {
+      parts.push(
+        <code className="bg-black/60 border border-purple-500/25 px-1 py-0.5 rounded text-[10px] font-mono text-purple-300" key={matchStart}>
+          {matchText.slice(1, -1)}
+        </code>
+      );
+    } else {
+      parts.push(
+        <a href={matchText} target="_blank" rel="referrer" className="text-cyan-400 hover:underline inline-flex items-center space-x-0.5 font-medium" key={matchStart}>
+          {matchText}
+        </a>
+      );
+    }
+    
+    currentIdx = itemRegex.lastIndex;
+  }
+  
+  if (currentIdx < text.length) {
+    parts.push(text.substring(currentIdx));
+  }
+  
+  return parts.length > 0 ? parts : text;
+}
+
+function renderFormattedMessage(content: string) {
+  if (!content) return null;
+  const lines = content.split('\n');
+  return (
+    <div className="space-y-1.5 font-sans">
+      {lines.map((line, idx) => {
+        const cleanLine = line.trim();
+        
+        // H3 Header format
+        if (cleanLine.startsWith('###')) {
+          return (
+            <h4 key={idx} className="text-white font-semibold text-[11.5px] uppercase tracking-wide border-l-2 border-purple-500 pl-1.5 mt-2 mb-1">
+              {cleanLine.replace('###', '').trim()}
+            </h4>
+          );
+        }
+        
+        // H2 Header format
+        if (cleanLine.startsWith('##')) {
+          return (
+            <h4 key={idx} className="text-white font-bold text-xs uppercase tracking-wider mt-2.5 mb-1.5 text-purple-300">
+              {cleanLine.replace('##', '').trim()}
+            </h4>
+          );
+        }
+        
+        // Unordered bullet point card
+        if (cleanLine.startsWith('- ') || cleanLine.startsWith('* ')) {
+          const innerText = cleanLine.substring(2);
+          return (
+            <div key={idx} className="flex items-start space-x-1.5 pl-1.5 text-gray-300 text-[11px] leading-relaxed">
+              <span className="text-purple-400 mt-1 shrink-0 text-[10px]">✦</span>
+              <span className="flex-1">{formatInlineElements(innerText)}</span>
+            </div>
+          );
+        }
+
+        // Ordered list format
+        const numMatch = cleanLine.match(/^(\d+)\.\s(.*)/);
+        if (numMatch) {
+          return (
+            <div key={idx} className="flex items-start space-x-1.5 pl-1.5 text-gray-300 text-[11px] leading-relaxed">
+              <span className="font-mono text-purple-300 font-bold text-[9px] bg-purple-500/10 px-1 rounded transform translate-y-0.5">{numMatch[1]}</span>
+              <span className="flex-1">{formatInlineElements(numMatch[2])}</span>
+            </div>
+          );
+        }
+
+        if (cleanLine === '') {
+          return <div key={idx} className="h-1" />;
+        }
+
+        // Paragraph line
+        return (
+          <p key={idx} className="text-gray-200 text-[11px] leading-relaxed">
+            {formatInlineElements(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
 }
 
 const PRESET_TOPICS = [
@@ -27,13 +138,27 @@ export default function HeyTahirAgent() {
     {
       id: 'm1',
       role: 'assistant',
-      content: "Hey, I am Tahir A I, an A I agent. Welcome to my workspace. Ask me anything about my masters skills, custom automations, or start a virtual voice call with me!",
+      content: "Hey, I am Tahir AI, an active conversational agent designed with world-class intelligence. Welcome to my workspace. Ask me anything about my masters skills, custom automations, or start a virtual voice call with me!",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
+  // Custom Premium AI States
+  const [voiceProfile, setVoiceProfile] = useState<'juniper' | 'cooper' | 'samantha' | 'ember'>('juniper');
+  const [suggestions, setSuggestions] = useState<string[]>([
+    "What are his tuition fees?",
+    "Tell me about his AI services.",
+    "What is his Upwork pricing?",
+    "Open Admission Registration form"
+  ]);
+  
+  // High fidelity Streaming typewriter simulator states
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
+  const [streamingText, setStreamingText] = useState('');
+  const activeStreamIntervalRef = useRef<number | null>(null);
+
   // Call States
   const [isCallActive, setIsCallActive] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
@@ -121,8 +246,8 @@ export default function HeyTahirAgent() {
         speakText(
           "Greetings, traveler. I am 'Hey Tahir', Mohammad Tahir's active AI companion. " +
           "I have been loaded with high-capacity digital intelligence. " +
-          "Allow me to walk you through his five hundred completed projects, twenty custom applications, " +
-          "and fifty beautiful custom web designs on his portfolio."
+          "Allow me to walk you through his five hundred completed projects, five custom applications, " +
+          "and twenty beautiful custom web designs on his portfolio."
         );
       }, 600);
     }
@@ -195,9 +320,69 @@ export default function HeyTahirAgent() {
   }, [isCallActive]);
 
   // Voice synthesis speaker helper
+  const playSpeechMelody = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      
+      // Beautiful harmonic high-vibrancy crystal melody sequence (E-major pentatonic arpeggio)
+      const notes = [659.25, 830.61, 987.77, 1318.51]; // E5, G#5, B5, E6
+      notes.forEach((freq, index) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        // Use a blend of triangle and sine wave for warm melodic response
+        osc.type = index % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq, now + index * 0.08);
+        
+        gain.gain.setValueAtTime(0, now + index * 0.08);
+        gain.gain.linearRampToValueAtTime(0.04, now + index * 0.08 + 0.02); // very soft elegant volume
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.4); // beautiful slow smooth decay
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.start(now + index * 0.08);
+        osc.stop(now + index * 0.08 + 0.45);
+      });
+    } catch (e) {
+      console.warn("Melodic synthesis preview audio failed:", e);
+    }
+  };
+
+  // Keyboard typewriter click feedback for streaming effect
+  const playKeyClick = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(3600 + Math.random() * 400, now); // soft high digital tick
+      
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.0012, now + 0.001);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.008);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.015);
+    } catch (e) {}
+  };
+
+  // Voice synthesis speaker helper
   const speakText = (text: string) => {
     if (!isTTSActive || !synthesisRef.current) return;
     try {
+      // Play a beautiful modern futuristic Siri-like melodic alert chime first
+      playSpeechMelody();
+
       // Cancel active voice speech first
       synthesisRef.current.cancel();
 
@@ -206,43 +391,59 @@ export default function HeyTahirAgent() {
         .replace(/[*_`#\-]/g, '')
         .replace(/\[.*?\]\(.*?\)/g, '')
         .replace(/\/\/.*$/gm, '')
-        .substring(0, 280); // Speak first 280 characters to keep it fast, clear & elegant
+        .substring(0, 240); // Speak first 240 characters to keep it fast, clear & elegant
 
       const utterance = new SpeechSynthesisUtterance(cleanText);
-      
-      // Select the absolute best premium female voice (smooth normal girl voice/attractive assistant register)
       const voices = synthesisRef.current.getVoices();
       
-      // Look for a high-quality female assistant voice explicitly
-      const softVoice = voices.find(v => {
+      // Select appropriate parameters based on premium voiceProfile
+      let pitch = 1.08;
+      let rate = 1.03;
+      let preferredKeywords: string[] = [];
+
+      if (voiceProfile === 'cooper') {
+        pitch = 0.82; // Deeper commanding male tone
+        rate = 0.98;
+        preferredKeywords = ["google uk english male", "male", "david", "microsoft david", "george"];
+      } else if (voiceProfile === 'samantha') {
+        pitch = 1.18; // Crisp, high female register like Siri classic
+        rate = 1.05;
+        preferredKeywords = ["samantha", "siri", "karen", "victoria"];
+      } else if (voiceProfile === 'ember') {
+        pitch = 1.25; // Energetic, warm and friendly female
+        rate = 1.10;
+        preferredKeywords = ["hazel", "zira", "natural", "google us english", "microsoft zira"];
+      } else {
+        // Juniper default elegant assistant
+        pitch = 1.08;
+        rate = 1.02;
+        preferredKeywords = ["google us english", "natural", "zira", "siri", "samantha"];
+      }
+
+      // Look for custom matched voice profile
+      let targetVoice = voices.find(v => {
         const name = v.name.toLowerCase();
-        return (name.includes("siri") || name.includes("apple") || name.includes("samantha") || name.includes("hazel") || name.includes("zira") || name.includes("victoria")) && (name.includes("female") || name.includes("soft") || name.includes("natural"));
-      }) || voices.find(v => {
-        const name = v.name.toLowerCase();
-        return name.includes("siri") || name.includes("apple") || name.includes("samantha") || name.includes("zira") || name.includes("hazel") || name.includes("karen") || name.includes("victoria");
-      }) || voices.find(v => {
-        const name = v.name.toLowerCase();
-        return name.includes("female") && v.lang.startsWith("en");
-      }) || voices.find(v => {
-        return v.lang.startsWith("en-US");
-      }) || voices.find(v => {
-        return v.lang.startsWith("en");
+        return preferredKeywords.some(kw => name.includes(kw)) && v.lang.startsWith("en");
       });
 
-      if (softVoice) {
-        utterance.voice = softVoice;
+      // Quick fallback
+      if (!targetVoice) {
+        targetVoice = voices.find(v => v.lang.startsWith("en-US")) || voices.find(v => v.lang.startsWith("en"));
+      }
+
+      if (targetVoice) {
+        utterance.voice = targetVoice;
       }
       
-      // Soft, highly attractive, confident female/girl voice configuration
-      utterance.rate = 1.05;   // Normal natural tempo, not slow or dragging
-      utterance.pitch = 1.05;  // Beautiful friendly soft light female pitch for a genuine human sound
-      utterance.volume = 1.0;  // Maximum digital power amplitude
+      utterance.rate = rate;   
+      utterance.pitch = pitch;  
+      utterance.volume = 1.0;  
 
       utterance.onstart = () => {
-        setVoiceLog("Hey Tahir is speaking with a smooth attractive vocal tone...");
+        setVoiceLog(`Hey Tahir AI is speaking over a customized (${voiceProfile}) host register...`);
       };
       utterance.onend = () => {
-        setVoiceLog(isCallActive ? "Session calibrated. Talk into your microphone..." : "Speech output completed successfully.");
+        setVoiceLog(isCallActive ? "Session calibrated. Speak into your microphone..." : "Speech output completed successfully.");
       };
 
       activeUtteranceRef.current = utterance;
@@ -339,10 +540,101 @@ export default function HeyTahirAgent() {
     }
   };
 
+  // Dynamically update follow-up inquiry chips based on chat response context
+  const updateFollowupSuggestions = (replyText: string) => {
+    const lowerReply = replyText.toLowerCase();
+    let computedList = [
+      "Show Digital Skill Academy tracks?",
+      "What are his tuition fees?",
+      "Can I enroll if I'm a beginner?",
+      "Ask about custom CRM automation"
+    ];
+    if (lowerReply.includes("admission") || lowerReply.includes("enroll") || lowerReply.includes("academy") || lowerReply.includes("tuition")) {
+      computedList = [
+        "Join AI Automation Mastery Track",
+        "Begin Fullstack Web Dev training",
+        "How can I apply for a scholarship?",
+        "Show WhatsApp contact verification"
+      ];
+    } else if (lowerReply.includes("automation") || lowerReply.includes("pipeline") || lowerReply.includes("proposal") || lowerReply.includes("solutions")) {
+      computedList = [
+        "Zapier vs custom Node orchestrator",
+        "What is the average ROI of AI setup?",
+        "Can we integrate with Slack alerts?",
+        "Configure custom integration flow"
+      ];
+    } else if (lowerReply.includes("website") || lowerReply.includes("design") || lowerReply.includes("app") || lowerReply.includes("react")) {
+      computedList = [
+        "What performance tools does he use?",
+        "What is modern bento aesthetic?",
+        "How long does a custom app take?",
+        "Show graphic brand strategy"
+      ];
+    } else if (lowerReply.includes("pricing") || lowerReply.includes("hire") || lowerReply.includes("rate") || lowerReply.includes("fiverr") || lowerReply.includes("upwork")) {
+      computedList = [
+        "Consultation rate on Upwork?",
+        "Book a call with Tahir",
+        "Hire for automation consulting",
+        "Is there a project contract template?"
+      ];
+    }
+    setSuggestions(computedList);
+  };
+
+  // High fidelity word-by-word streaming typewriter simulator (Claude / ChatGPT style)
+  const streamMessageText = (messageText: string, messageId: string, onProgressComplete: () => void) => {
+    // Clear any previous streaming timers first
+    if (activeStreamIntervalRef.current) {
+      clearInterval(activeStreamIntervalRef.current);
+    }
+
+    setStreamingMessageId(messageId);
+    setStreamingText('');
+    
+    // Auto speak right away as soon as streaming triggers!
+    stopVoice();
+    speakText(messageText);
+
+    let index = 0;
+    const words = messageText.split(' ');
+    
+    const interval = window.setInterval(() => {
+      if (index < words.length) {
+        const nextPartial = words.slice(0, index + 1).join(' ');
+        setStreamingText(nextPartial);
+        playKeyClick(); // very quiet real-time mechanical keyboard click tick
+        index++;
+      } else {
+        clearInterval(interval);
+        activeStreamIntervalRef.current = null;
+        setStreamingText('');
+        onProgressComplete();
+      }
+    }, 45); // highly aligned pro-level typing cadence
+
+    activeStreamIntervalRef.current = interval;
+  };
+
+  // Hook into continuous component unmount cleanup
+  useEffect(() => {
+    return () => {
+      if (activeStreamIntervalRef.current) {
+        clearInterval(activeStreamIntervalRef.current);
+      }
+    };
+  }, []);
+
   // Submit messaging logic connected to Express backend
   const handleSendMessage = async (textToSend?: string) => {
     const rawText = textToSend || inputText;
     if (!rawText.trim() || isLoading) return;
+
+    // Interrupt any active speaking and active streams instantly (ChatGPT interruption pattern)
+    stopVoice();
+    if (activeStreamIntervalRef.current) {
+      clearInterval(activeStreamIntervalRef.current);
+      activeStreamIntervalRef.current = null;
+    }
 
     const userMessage: ChatMessage = {
       id: `u-${Date.now()}`,
@@ -378,37 +670,42 @@ export default function HeyTahirAgent() {
         throw new Error(data.error);
       }
 
-      const agentMessage: ChatMessage = {
-        id: `a-${Date.now()}`,
+      setVoiceLog("Cognitive stream established. Formulating verbal signal...");
+
+      const mId = `a-${Date.now()}`;
+      const agentMessagePlaceholder: ChatMessage = {
+        id: mId,
         role: 'assistant',
-        content: data.reply || "I am processing. Please retry.",
+        content: '', // Starts empty, populated dynamically through streamingText in rendering
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
-      setMessages(prev => [...prev, agentMessage]);
-      setVoiceLog("Agent response generated.");
-      
-      // Auto speak the response
-      speakText(agentMessage.content);
+      setMessages(prev => [...prev, agentMessagePlaceholder]);
+
+      // Stream text in real time
+      streamMessageText(data.reply || "I am processing. Please retry.", mId, () => {
+        // Safe finalizer
+        setMessages(prev => prev.map(m => m.id === mId ? { ...m, content: data.reply } : m));
+        updateFollowupSuggestions(data.reply);
+        setVoiceLog("Conversational output completed successfully.");
+      });
 
     } catch (err: any) {
       console.error("AI Agent dispatch failed:", err);
-      setMessages(prev => [
-        ...prev,
-        {
-          id: `err-${Date.now()}`,
-          role: 'assistant',
-          content: `⚠️ Connection status: STALE_TELEMETRY. Could not establish prompt pipeline. Error: ${err.message || 'Check GEMINI_API_KEY in Secrets context.'}`,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
+      const errorMsg: ChatMessage = {
+        id: `err-${Date.now()}`,
+        role: 'assistant',
+        content: `⚠️ Connection status: STALE_TELEMETRY. Could not establish prompt pipeline. Error: ${err.message || 'Check GEMINI_API_KEY in Secrets context.'}`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, errorMsg]);
       setVoiceLog("Failed to sync context block.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Dynamic soundwave canvas animation loop
+  // Dynamic soundwave / glowing fluid intelligence orb canvas animation loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !isCallActive) return;
@@ -446,50 +743,147 @@ export default function HeyTahirAgent() {
       }
       ctx.clearRect(0, 0, width, height);
 
-      const barCount = 42;
-      const spacing = 4;
-      const barWidth = (width - (barCount - 1) * spacing) / barCount;
+      const centerX = width / 2;
       const centerY = height / 2;
+      
+      const isAIActiveSpeaking = synthesisRef.current?.speaking;
 
-      ctx.fillStyle = 'rgba(168, 85, 247, 0.45)';
+      // 1. Ambient Background Aura Glow representing computational intensity
+      const aura = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, 100);
+      if (isAIActiveSpeaking) {
+        aura.addColorStop(0, 'rgba(16, 185, 129, 0.22)'); // Emerald speak halo
+        aura.addColorStop(1, 'rgba(16, 185, 129, 0)');
+      } else if (isListening) {
+        aura.addColorStop(0, 'rgba(245, 158, 11, 0.25)'); // Warm amber listen halo
+        aura.addColorStop(1, 'rgba(245, 158, 11, 0)');
+      } else if (isLoading) {
+        aura.addColorStop(0, 'rgba(99, 102, 241, 0.28)'); // Deep indigo thinking halo
+        aura.addColorStop(1, 'rgba(124, 58, 237, 0)');
+      } else {
+        aura.addColorStop(0, 'rgba(168, 85, 247, 0.16)'); // Signature violet idle halo
+        aura.addColorStop(1, 'rgba(168, 85, 247, 0)');
+      }
+      
+      ctx.fillStyle = aura;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 110, 0, Math.PI * 2);
+      ctx.fill();
 
-      for (let i = 0; i < barCount; i++) {
-        // Build double sine wave calculations based on load state, audio speech and time
-        const multiplier = isLoading 
-          ? 35 + Math.sin(tick * 0.2 + i * 0.4) * 15
-          : synthesisRef.current?.speaking 
-            ? 30 + Math.abs(Math.sin(tick * 0.15 + i * 0.5)) * 25
-            : isListening
-              ? 10 + Math.abs(Math.sin(tick * 0.4 + i * 0.6)) * 26
-              : 6 + Math.sin(tick * 0.05 + i * 0.2) * 5;
-
-        const distanceToCenter = Math.abs(i - barCount / 2);
-        const gaussianFactor = Math.pow(Math.E, -Math.pow(distanceToCenter / (barCount * 0.35), 2));
+      // 2. Multi-layered interconnected floating vector rings (Apple Intelligence & Gemini style)
+      const layerCount = 4;
+      for (let l = 0; l < layerCount; l++) {
+        ctx.beginPath();
         
-        const barHeight = multiplier * gaussianFactor;
-
-        // Draw isometric glowing bar plates
-        const x = i * (barWidth + spacing);
-        const y = centerY - barHeight / 2;
-
-        const gradient = ctx.createLinearGradient(x, y, x, y + barHeight);
-        if (synthesisRef.current?.speaking) {
-          gradient.addColorStop(0, '#10b981'); // Emerald green when speaking 
-          gradient.addColorStop(0.5, '#34d399');
-          gradient.addColorStop(1, '#a855f7');
+        let baseRadius = 45;
+        if (isAIActiveSpeaking) {
+          baseRadius += Math.sin(tick * 0.12 + l * 1.2) * 8 + 6;
         } else if (isListening) {
-          gradient.addColorStop(0, '#f59e0b'); // Amber warning when listening
-          gradient.addColorStop(1, '#ef4444');
+          baseRadius += Math.abs(Math.cos(tick * 0.18 + l * 1.5)) * 12 + 2;
+        } else if (isLoading) {
+          baseRadius += Math.sin(tick * 0.08 + l) * 2.5;
         } else {
-          gradient.addColorStop(0, '#a855f7'); // Violet signature when idle/timer
-          gradient.addColorStop(0.5, '#6366f1');
-          gradient.addColorStop(1, 'rgba(124, 58, 237, 0.15)');
+          baseRadius += Math.sin(tick * 0.04 + l * 1.8) * 2.8;
         }
 
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.roundRect(x, y, barWidth, barHeight, 2);
-        ctx.fill();
+        const pointCount = 60;
+        for (let p = 0; p <= pointCount; p++) {
+          const angle = (p / pointCount) * Math.PI * 2;
+          
+          let noise = 0;
+          if (isAIActiveSpeaking) {
+            noise = Math.sin(angle * 4 + tick * 0.15 + l) * 9 * Math.sin(tick * 0.05);
+          } else if (isListening) {
+            noise = Math.cos(angle * 3 + tick * 0.22 + l) * 11;
+          } else if (isLoading) {
+            noise = Math.sin(angle * 6 + tick * 0.1) * 3.5;
+          } else {
+            noise = Math.sin(angle * 2 + tick * 0.05) * 1.8;
+          }
+
+          const r = baseRadius + noise;
+          const x = centerX + Math.cos(angle) * r;
+          const y = centerY + Math.sin(angle) * r;
+
+          if (p === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.closePath();
+        
+        // Custom elegant gradients for each intelligence layers
+        const gradient = ctx.createLinearGradient(centerX - 50, centerY - 50, centerX + 50, centerY + 50);
+        if (isAIActiveSpeaking) {
+          if (l === 0) {
+            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.8)'); // Emerald
+            gradient.addColorStop(1, 'rgba(52, 211, 153, 0.1)');
+          } else if (l === 1) {
+            gradient.addColorStop(0, 'rgba(99, 102, 241, 0.7)'); // Indigo
+            gradient.addColorStop(1, 'rgba(168, 85, 247, 0.1)');
+          } else {
+            gradient.addColorStop(0, 'rgba(6, 182, 212, 0.6)'); // Cyan
+            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.05)');
+          }
+        } else if (isListening) {
+          if (l === 0) {
+            gradient.addColorStop(0, 'rgba(245, 158, 11, 0.8)'); // Amber
+            gradient.addColorStop(1, 'rgba(239, 68, 68, 0.15)');
+          } else {
+            gradient.addColorStop(0, 'rgba(239, 68, 68, 0.7)'); // Orange-Red
+            gradient.addColorStop(1, 'rgba(245, 158, 11, 0.05)');
+          }
+        } else if (isLoading) {
+          gradient.addColorStop(0, 'rgba(99, 102, 241, 0.6)'); // Indigo thinking
+          gradient.addColorStop(1, 'rgba(168, 85, 247, 0.2)');
+        } else {
+          gradient.addColorStop(0, 'rgba(168, 85, 247, 0.45)'); // Signature idle violet
+          gradient.addColorStop(0.5, 'rgba(99, 102, 241, 0.2)');
+          gradient.addColorStop(1, 'rgba(168, 85, 247, 0.01)');
+        }
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = l === 0 ? 3 : l === 1 ? 2 : 1.2;
+        ctx.stroke();
+
+        // Fill background of closest layered core
+        if (l === 0) {
+          ctx.fillStyle = isAIActiveSpeaking 
+            ? 'rgba(16, 185, 129, 0.03)' 
+            : isListening 
+              ? 'rgba(245, 158, 11, 0.03)'
+              : 'rgba(168, 85, 247, 0.01)';
+          ctx.fill();
+        }
+      }
+
+      // 3. High frequency interactive core sphere
+      ctx.beginPath();
+      const coreR = 6 + (isAIActiveSpeaking ? Math.sin(tick * 0.3) * 2 : 0);
+      ctx.arc(centerX, centerY, coreR, 0, Math.PI * 2);
+      ctx.fillStyle = isAIActiveSpeaking 
+        ? 'rgba(255, 255, 255, 0.85)' 
+        : isListening 
+          ? 'rgba(245, 158, 11, 0.85)' 
+          : 'rgba(168, 85, 247, 0.75)';
+      ctx.shadowColor = isAIActiveSpeaking ? '#34d399' : '#a855f7';
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0; // Reset canvas shadow
+
+      // 4. Floating orbiting micro-energy spark trails
+      if (isLoading || isAIActiveSpeaking) {
+        const particleCount = 3;
+        for (let i = 0; i < particleCount; i++) {
+          const orbitAngle = tick * 0.06 + (i * Math.PI * 2 / particleCount);
+          const orbitRadius = 64 + Math.sin(tick * 0.1 + i) * 6;
+          const px = centerX + Math.cos(orbitAngle) * orbitRadius;
+          const py = centerY + Math.sin(orbitAngle) * orbitRadius;
+          ctx.beginPath();
+          ctx.arc(px, py, 1.8, 0, Math.PI * 2);
+          ctx.fillStyle = isAIActiveSpeaking ? '#10b981' : '#a855f7';
+          ctx.fill();
+        }
       }
 
       tick += 1;
@@ -614,11 +1008,14 @@ export default function HeyTahirAgent() {
             {isOpen ? (
               <X className="w-4.5 h-4.5 text-white" />
             ) : (
-              <div className="relative">
-                <Bot className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-300 animate-pulse" />
-                <span className="absolute -top-0.5 -right-0.5 flex h-1.5 w-1.5">
+              <div className="relative flex items-center justify-center">
+                <Brain className="w-5 h-5 text-purple-100 absolute group-hover:scale-110 transition-transform duration-300 animate-pulse z-10" />
+                <Aperture className="w-9 h-9 text-purple-400/40 absolute animate-[spin_4s_linear_infinite] group-hover:text-purple-300" />
+                <Hexagon className="w-7 h-7 text-cyan-400/40 absolute animate-[spin_6s_linear_infinite_reverse]" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-300 absolute -top-3 -right-3 animate-pulse" />
+                <span className="absolute -top-1 -right-0.5 flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
                 </span>
               </div>
             )}
@@ -645,8 +1042,9 @@ export default function HeyTahirAgent() {
             <div className="relative z-10 p-4 border-b border-purple-500/15 bg-purple-950/10 flex items-center justify-between">
               <div className="flex items-center space-x-2 text-left">
                 <div className="relative">
-                  <div className="p-1.5 rounded-xl bg-purple-500/15 text-purple-300 border border-purple-500/25">
-                    <Bot className="w-4.5 h-4.5 text-purple-300" />
+                  <div className="p-1.5 rounded-xl bg-purple-500/15 text-purple-300 border border-purple-500/25 relative flex items-center justify-center overflow-hidden w-8 h-8">
+                    <Brain className="w-4.5 h-4.5 text-purple-300 relative z-10" />
+                    <Aperture className="w-8 h-8 text-purple-400/30 absolute animate-[spin_5s_linear_infinite]" />
                   </div>
                   <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 border border-[#050111]" />
                 </div>
@@ -732,6 +1130,9 @@ export default function HeyTahirAgent() {
                     <div className="flex-1 p-4 overflow-y-auto space-y-4 max-h-[380px] scrollbar-thin">
                       {messages.map((msg) => {
                         const isAssistant = msg.role === 'assistant';
+                        const isStreaming = streamingMessageId === msg.id;
+                        const displayText = isStreaming ? streamingText : msg.content;
+                        
                         return (
                           <div
                             key={msg.id}
@@ -748,16 +1149,20 @@ export default function HeyTahirAgent() {
                             <div className="space-y-1 max-w-[280px]">
                               <div className={`p-3 rounded-2xl text-[11px] leading-relaxed text-left font-sans ${
                                 isAssistant 
-                                  ? 'bg-purple-950/10 border border-purple-500/10 text-gray-200 rounded-tl-sm'
-                                  : 'bg-indigo-600 border border-indigo-500 text-white rounded-tr-sm'
+                                  ? 'bg-purple-950/15 border border-purple-500/15 text-gray-200 rounded-tl-sm shadow-[inset_0_1px_12px_rgba(168,85,247,0.05)]'
+                                  : 'bg-indigo-600 border border-indigo-505 text-white rounded-tr-sm'
                               }`}>
-                                <p className="whitespace-pre-line">{msg.content}</p>
+                                {isAssistant ? renderFormattedMessage(displayText) : <p className="whitespace-pre-line">{displayText}</p>}
+                                
+                                {isStreaming && (
+                                  <span className="inline-block w-1 h-3.5 bg-purple-400 ml-0.5 animate-pulse transform translate-y-0.5" />
+                                )}
                               </div>
                               <div className="flex items-center justify-between px-1">
                                 <span className="text-[7.5px] font-mono text-gray-500 block text-left">
                                   {msg.timestamp}
                                 </span>
-                                {isAssistant && (
+                                {isAssistant && !isStreaming && msg.content && (
                                   <button
                                     onClick={() => {
                                       playSynthChime();
@@ -778,33 +1183,57 @@ export default function HeyTahirAgent() {
 
                       {/* Loading formulation animation */}
                       {isLoading && (
-                        <div className="flex items-start gap-2.5">
+                        <div className="flex items-start gap-2.5 flex-row">
                           <div className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/15 text-purple-300 shrink-0">
                             <Bot className="w-3.5 h-3.5 animate-spin" />
                           </div>
-                          <div className="p-3 bg-purple-950/10 border border-purple-500/10 rounded-2xl rounded-tl-sm text-[11px] text-purple-300 font-mono text-left max-w-sm flex items-center space-x-2">
+                          <div className="p-2.5 bg-purple-950/10 border border-purple-500/10 rounded-2xl rounded-tl-sm text-[10px] text-purple-300 font-mono text-left max-w-sm flex items-center space-x-1.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" />
                             <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.2s]" />
                             <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.4s]" />
-                            <span>Thinking...</span>
+                            <span>FORMULATING...</span>
                           </div>
                         </div>
                       )}
                       <div ref={messagesEndRef} />
                     </div>
 
-                    {/* Presets options */}
+                    {/* Premium Active Voice Profile Switcher */}
+                    <div className="px-3 py-2 border-t border-purple-500/10 bg-black/20 text-left flex items-center justify-between">
+                      <span className="font-mono text-[7px] text-purple-300 uppercase tracking-widest font-black">Vocal profile:</span>
+                      <div className="flex gap-1">
+                        {(['juniper', 'cooper', 'samantha', 'ember'] as const).map((prof) => (
+                          <button
+                            key={prof}
+                            onClick={() => {
+                              setVoiceProfile(prof);
+                              playSynthChime();
+                              speakText(`A I voice profile calibrated to ${prof}. ready.`);
+                            }}
+                            className={`px-1.5 py-0.5 font-mono text-[7px] rounded border transition-all uppercase font-bold cursor-pointer ${
+                              voiceProfile === prof
+                                ? 'bg-purple-500/20 text-purple-300 border-purple-400/40 shadow-[0_1px_8px_rgba(168,85,247,0.2)]'
+                                : 'bg-transparent text-gray-500 border-purple-500/5 hover:text-gray-300 hover:border-purple-500/10'
+                            }`}
+                          >
+                            {prof}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Presets and contextual choices */}
                     <div className="p-3 border-t border-purple-500/10 bg-black/30 text-left">
-                      <span className="font-mono text-[7px] text-gray-500 uppercase tracking-widest block mb-2 font-bold">Quick Inquiries topics</span>
+                      <span className="font-mono text-[7px] text-gray-500 uppercase tracking-widest block mb-2 font-bold">Contextual Follow-ups</span>
                       <div className="flex flex-wrap gap-1.5">
-                        {PRESET_TOPICS.map((topic, i) => (
+                        {suggestions.map((suggestion, i) => (
                           <button
                             key={i}
-                            onClick={() => handleSendMessage(topic.query)}
+                            onClick={() => handleSendMessage(suggestion)}
                             disabled={isLoading}
                             className="bg-purple-500/5 hover:bg-purple-500/15 border border-purple-500/10 hover:border-purple-500/25 active:scale-[0.97] transition-all py-1 px-2 rounded-lg text-[9px] text-gray-300 font-mono cursor-pointer"
                           >
-                            + {topic.label}
+                            ✦ {suggestion}
                           </button>
                         ))}
                       </div>

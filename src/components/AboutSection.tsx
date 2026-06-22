@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Target, Award, Shield, Cpu, BookOpen, Send, UserCheck, Terminal, FileCode, Braces, Settings, Activity } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState<'agent' | 'stack' | 'status'>('agent');
@@ -72,7 +73,14 @@ export default function AboutSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div id="about-header" className="text-center max-w-3xl mx-auto mb-16 sm:mb-24">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          id="about-header" 
+          className="text-center max-w-3xl mx-auto mb-16 sm:mb-24"
+        >
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-purple-400 font-bold block mb-3">
             IDENTITY CONTEXT
           </span>
@@ -80,13 +88,19 @@ export default function AboutSection() {
             Who I Am
           </h2>
           <div className="mt-4 h-[2px] w-20 bg-gradient-to-r from-purple-500 via-indigo-500 to-transparent mx-auto" />
-        </div>
+        </motion.div>
 
         {/* Bento Grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* Column 1: System Config Terminal (col-span-4) - Completely Faceless Tech Display */}
-          <div className="lg:col-span-4 flex flex-col justify-between glass-panel p-5 rounded-3xl relative overflow-hidden group select-none">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-4 flex flex-col justify-between glass-panel p-5 rounded-3xl relative overflow-hidden group select-none"
+          >
             {/* Ambient code background layout glow */}
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-purple-500/5 to-transparent pointer-events-none" />
             <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-bl-full pointer-events-none" />
@@ -155,10 +169,16 @@ export default function AboutSection() {
                 <span>MT_SYSTEM_LIVE</span>
               </span>
             </div>
-          </div>
+          </motion.div>
           
           {/* Column 2: Paragraph Story (col-span-5) */}
-          <div className="lg:col-span-5 flex flex-col justify-between glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden group">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="lg:col-span-5 flex flex-col justify-between glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden group"
+          >
             {/* Tech details absolute card */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 opacity-50 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full pointer-events-none" />
             
@@ -199,10 +219,16 @@ export default function AboutSection() {
                 <p className="font-display font-bold text-[11px] text-gray-200 mt-1">AI Autonomous</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Column 3: Key Pillars list (col-span-3) */}
-          <div className="lg:col-span-3 flex flex-col justify-between space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="lg:col-span-3 flex flex-col justify-between space-y-4"
+          >
             {pillars.map((pillar, idx) => (
               <div
                 key={idx}
@@ -228,7 +254,7 @@ export default function AboutSection() {
                 </div>
               </div>
             ))}
-          </div>
+          </motion.div>
 
         </div>
 

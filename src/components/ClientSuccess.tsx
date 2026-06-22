@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TESTIMONIALS, CLIENT_RESULTS, BRAND_LOGOS } from '../data';
 import { Star, MessageSquare, ArrowLeft, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function ClientSuccess() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -14,7 +15,7 @@ export default function ClientSuccess() {
   };
 
   return (
-    <section id="process" className="relative py-24 sm:py-32 bg-[#04010f] overflow-hidden">
+    <section id="client-success" className="relative py-24 sm:py-32 bg-[#04010f] overflow-hidden">
       {/* Decorative vector background */}
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/4 w-[350px] h-[350px] bg-indigo-900/10 rounded-full blur-[100px] pointer-events-none" />
@@ -22,7 +23,13 @@ export default function ClientSuccess() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-purple-400 font-bold block mb-3">
             STRATEGIC IMPACT MATRIX 
           </span>
@@ -30,10 +37,16 @@ export default function ClientSuccess() {
             Helping Businesses Grow
           </h2>
           <div className="mt-4 h-[2px] w-20 bg-gradient-to-r from-purple-500 via-indigo-500 to-transparent mx-auto" />
-        </div>
+        </motion.div>
 
         {/* 1. Infinite Horizontal Logos Marquee */}
-        <div className="relative w-full overflow-hidden py-10 border-y border-purple-500/10 mb-20 bg-[#03000b]/50">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative w-full overflow-hidden py-10 border-y border-purple-500/10 mb-20 bg-[#03000b]/50"
+        >
           <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-[#04010f] to-transparent z-10 pointer-events-none" />
           <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#04010f] to-transparent z-10 pointer-events-none" />
 
@@ -54,13 +67,19 @@ export default function ClientSuccess() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Double Column Bento Grid: Left results list, Right sliding testimonials */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
           
           {/* Left Column: Business Growth Results (6 wide) */}
-          <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="lg:col-span-6 flex flex-col justify-between space-y-6"
+          >
             <div className="glass-panel p-8 sm:p-10 rounded-3xl flex-1 flex flex-col justify-between">
               
               <div>
@@ -94,10 +113,16 @@ export default function ClientSuccess() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Sliding Testimonial block (6 wide) */}
-          <div className="lg:col-span-6 flex flex-col">
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="lg:col-span-6 flex flex-col"
+          >
             <div className="glass-panel p-8 sm:p-10 rounded-3xl flex-1 flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-bl-full pointer-events-none" />
               
@@ -170,7 +195,7 @@ export default function ClientSuccess() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
 

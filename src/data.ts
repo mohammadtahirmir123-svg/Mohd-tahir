@@ -14,9 +14,9 @@ export const STATS = [
   { value: '3+ Yrs', label: 'Tech Experience', marker: 'EXPERIENCE' },
   { value: '2+ Yrs', label: 'Trading Experience', marker: 'TRADING' },
   { value: '500+', label: 'Projects Completed', marker: 'DELIVERED' },
-  { value: '20+', label: 'Apps Built', marker: 'DEVELOPED' },
-  { value: '50+', label: 'Websites Designed', marker: 'DESIGNED' },
-  { value: '100+', label: 'People Trained', marker: 'EDUCATION' },
+  { value: '5+', label: 'Apps Built', marker: 'DEVELOPED' },
+  { value: '20+', label: 'Websites Designed', marker: 'DESIGNED' },
+  { value: '10+', label: 'People Trained', marker: 'EDUCATION' },
 ];
 
 export const TIMELINE: TimelineEvent[] = [
@@ -41,7 +41,7 @@ export const TIMELINE: TimelineEvent[] = [
     year: '2023 - Present',
     title: 'Lead Digital Educator & Coach',
     organization: 'Digital Academy Initiative',
-    description: 'Trained over 100+ individuals on Web Design, MS Office suites, Freelancing setup, and Client Acquisition pathways to empower sustainable remote works.',
+    description: 'Trained over 10+ individuals on Web Design, MS Office suites, Freelancing setup, and Client Acquisition pathways to empower sustainable remote works.',
     type: 'Education',
   },
 ];
@@ -285,6 +285,19 @@ export const AI_PROJECTS: AIProject[] = [
       { label: 'Invoice Gen', details: 'Compiles custom MS Word templates dynamically' },
       { label: 'Google Drive', details: 'Stores receipt logs secure in dedicated client folders' },
       { label: 'Invite Sent', details: 'Emails onboarding details and triggers introductory tutorial' },
+    ],
+  },
+  {
+    id: 'ai5',
+    title: 'Autonomous Bug Fixer & Security Firewall',
+    description: 'An intelligent cybersecurity agent and automated debugging engine. Formulates strong firewall security rules, monitors system logs for anomalies, and autonomously resolves pipeline breaks or vulnerability threats before they impact users.',
+    metrics: 'Maintains 99.99% system uptime, proactively patching 30+ critical vulnerability vectors monthly without human intervention.',
+    status: 'active',
+    steps: [
+      { label: 'Threat Scan', details: 'Continuous log monitoring and dynamic anomalous traffic profiling' },
+      { label: 'Firewall Rule', details: 'Deploys localized WAF rules instantly on threat detection IP' },
+      { label: 'Debug Patch', details: 'AI models analyze crash reports and issue direct AST code patches' },
+      { label: 'Service Reset', details: 'Restarts impacted container pods and validates recovery status' },
     ],
   },
 ];

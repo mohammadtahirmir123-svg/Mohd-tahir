@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TimelineEvent } from '../types';
 import { TIMELINE, EXPERTISE_CATEGORIES } from '../data';
 import { Award, Briefcase, Zap, Cpu, ArrowRight, Star, Globe, CheckCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function ExperienceSection() {
   const [activeTab, setActiveTab] = useState<'all' | 'Freelance' | 'Direct Clients' | 'Education'>('all');
@@ -24,7 +25,13 @@ export default function ExperienceSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Title */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-20"
+        >
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-purple-400 font-bold block mb-3">
             PROFESSIONAL CREDENTIALS 
           </span>
@@ -32,13 +39,19 @@ export default function ExperienceSection() {
             Professional Journey
           </h2>
           <div className="mt-4 h-[2px] w-20 bg-gradient-to-r from-purple-500 via-indigo-500 to-transparent mx-auto" />
-        </div>
+        </motion.div>
 
         {/* Master Double-Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
           {/* Left Column: Timeline & Platform Focus */}
-          <div className="lg:col-span-7 space-y-12">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-7 space-y-12"
+          >
             
             {/* Horizontal timeline tab controls */}
             <div className="flex flex-wrap gap-2 border-b border-purple-500/10 pb-4">
@@ -110,10 +123,16 @@ export default function ExperienceSection() {
               </div>
             </div>
 
-          </div>
+          </motion.div>
 
           {/* Right Column: Key Expertise lists */}
-          <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-28">
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="lg:col-span-5 space-y-8 lg:sticky lg:top-28"
+          >
             
             <div className="glass-panel p-8 rounded-3xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-500/5 rounded-bl-full pointer-events-none" />
@@ -165,7 +184,7 @@ export default function ExperienceSection() {
               </button>
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
 

@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 
 interface InteractiveCanvasProps {
   mode?: 'hero' | 'ambient';
+  backgroundTheme?: 'cyberpunk' | 'minimalist' | 'matrix';
 }
 
-export default function InteractiveCanvas({ mode = 'hero' }: InteractiveCanvasProps) {
+export default function InteractiveCanvas({ mode = 'hero', backgroundTheme = 'cyberpunk' }: InteractiveCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mouseRef = useRef({ targetX: 0, targetY: 0 });
   const isVisibleRef = useRef(true);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AI_PROJECTS } from '../data';
 import { Cpu, ArrowRight, Zap, Terminal, Sparkles, Play, RefreshCw, Layers, ShieldCheck, Database, Check, AlertCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface SimulationStep {
   label: string;
@@ -53,6 +54,16 @@ const SIMULATOR_DATA: Record<string, SimulationDataset> = {
       { label: 'Invite Sent', log: '✉️ Dispatching SMTP automated welcome pack, custom CRM access links & free consultation scheduler.' }
     ],
     finalResult: '💼 Retainer registered. Professional invoice stored & onboard welcome kit auto-transmitted!'
+  },
+  ai5: {
+    trigger: 'CRITICAL ALERT: System failure detected in payment microservice. Possible DDoS attack.',
+    steps: [
+      { label: 'Threat Scan', log: '🔍 Deep scanning network traffic patterns. Identified 40,000+ anomalous requests from external IP block.' },
+      { label: 'Firewall Rule', log: '🛡️ Formulating defensive strategy. Deploying geo-blocking WAF rules and rate limiting.' },
+      { label: 'Debug Patch', log: '🔧 AI analyzing crashed microservice logs. Generating optimal AST syntax patch for race condition.' },
+      { label: 'Service Reset', log: '🔄 Patch applied. Safely restarting Pods. System integrity verified at 100% health.' }
+    ],
+    finalResult: '🔒 Firewall fortified. Bug patched & system fully restored to 99.99% uptime seamlessly!'
   }
 };
 
@@ -309,7 +320,13 @@ export default function AIShowcase() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-20"
+        >
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-purple-400 font-bold block mb-3">
             AUTONOMOUS COGNITIVE SOLUTIONS
           </span>
@@ -317,33 +334,44 @@ export default function AIShowcase() {
             AI-Powered Solutions
           </h2>
           <p className="text-gray-400 text-xs sm:text-sm mt-3 max-w-lg mx-auto font-light leading-relaxed">
-            Unleashing continuous background process pipelines to cut administrative friction and convert organic signals 24 hours a day.
+            Unleashing continuous background process pipelines to cut administrative friction, resolve system threats, and convert organic signals 24 hours a day.
           </p>
           <div className="mt-4 h-[2px] w-20 bg-gradient-to-r from-purple-500 via-indigo-500 to-transparent mx-auto" />
-        </div>
+        </motion.div>
 
         {/* Master Bento Multi-Panel Grid for AI showpiece */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-stretch">
           
           {/* Left Column: Solution selector cards (5 wide) */}
-          <div className="lg:col-span-5 space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-5 space-y-4 perspective-[2000px]"
+          >
             <h4 className="text-left font-mono text-[10px] text-gray-500 uppercase tracking-widest mb-6">
               SELECT AUTOMATION SYSTEM
             </h4>
 
-            <div className="space-y-3.5">
-              {AI_PROJECTS.map((proj) => {
+            <div className="space-y-4">
+              {AI_PROJECTS.map((proj, index) => {
                 const isActive = activeProject === proj.id;
                 return (
-                  <button
+                  <motion.button
+                    initial={{ opacity: 0, y: 30, rotateX: 15, translateZ: -100 }}
+                    whileInView={{ opacity: 1, y: 0, rotateX: 0, translateZ: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.8, delay: index * 0.1, type: 'spring', stiffness: 100 }}
+                    whileHover={{ scale: 1.05, rotateY: 5, rotateX: -5, zIndex: 20, y: -5 }}
                     key={proj.id}
                     onClick={() => {
                       setActiveProject(proj.id);
                     }}
-                    className={`w-full p-6 rounded-2xl border transition-all duration-350 cursor-pointer text-left relative overflow-hidden group block ${
+                    className={`w-full p-6 rounded-2xl border transition-all duration-500 cursor-pointer text-left relative overflow-visible group block transform-gpu ${
                       isActive
-                        ? 'bg-purple-500/10 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)]'
-                        : 'bg-purple-500/5 border-purple-500/10 hover:border-purple-500/25'
+                        ? 'bg-purple-900/30 border-purple-500 shadow-[0_0_25px_rgba(168,85,247,0.3)] z-10'
+                        : 'bg-purple-500/5 hover:bg-[#08041a]/80 border-purple-500/10 hover:border-purple-400/60 hover:shadow-[0_20px_40px_rgba(168,85,247,0.2)] z-0'
                     }`}
                   >
                     {/* Tiny active orb icon */}
@@ -351,9 +379,9 @@ export default function AIShowcase() {
                       <span className="absolute top-4 right-4 w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,1)] animate-ping" />
                     )}
 
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-3 relative z-10">
                       <div className={`p-2 rounded-lg border text-purple-300 transition-colors ${
-                        isActive ? 'bg-purple-500/20 border-purple-400/30' : 'bg-purple-500/5 border-purple-500/10'
+                        isActive ? 'bg-purple-500/50 border-purple-400/50 shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-purple-500/10 border-purple-500/20 group-hover:bg-purple-500/30'
                       }`}>
                         <Cpu className="w-4 h-4" />
                       </div>
@@ -362,27 +390,33 @@ export default function AIShowcase() {
                       </span>
                     </div>
 
-                    <p className="text-gray-400 text-xs mt-3 leading-relaxed font-light line-clamp-2">
+                    <p className="text-gray-400 text-xs mt-4 leading-relaxed font-light line-clamp-2 relative z-10">
                       {proj.description}
                     </p>
                     
-                    <div className="mt-4 flex items-center justify-between text-[10px] font-mono">
+                    <div className="mt-5 flex items-center justify-between text-[10px] font-mono relative z-10">
                       <span className="text-purple-400 uppercase tracking-wide">
                         [ {proj.status} ]
                       </span>
-                      <span className="text-gray-550 group-hover:text-white transition-colors flex items-center space-x-1">
+                      <span className="text-gray-500 group-hover:text-purple-300 transition-colors flex items-center space-x-1">
                         <span>inspect workflow</span>
-                        <ArrowRight className="w-3 h-3" />
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                       </span>
                     </div>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Workflow visualization terminal (7 wide) */}
-          <div className="lg:col-span-7 flex flex-col">
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="lg:col-span-7 flex flex-col"
+          >
             <div className="glass-panel rounded-3xl p-6 sm:p-8 flex-1 flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-full pointer-events-none" />
               
@@ -603,7 +637,7 @@ export default function AIShowcase() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
 

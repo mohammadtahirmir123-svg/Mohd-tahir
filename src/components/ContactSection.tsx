@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle, ExternalLink, Globe, Calendar, RefreshCw } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -71,7 +72,13 @@ export default function ContactSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-20"
+        >
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-purple-400 font-bold block mb-3">
             SYNTAX PIPELINE ROUTING
           </span>
@@ -82,13 +89,19 @@ export default function ContactSection() {
             "Ready to elevate your digital presence? Submit your request details below and let's craft an executive roadmap."
           </p>
           <div className="mt-4 h-[2px] w-20 bg-gradient-to-r from-purple-500 via-indigo-500 to-transparent mx-auto" />
-        </div>
+        </motion.div>
 
         {/* Master Double-Column Bento Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch max-w-6xl mx-auto">
           
           {/* Left Column: Direct Coordinates (5 wide) */}
-          <div className="lg:col-span-5 space-y-6 flex flex-col justify-between">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-5 space-y-6 flex flex-col justify-between"
+          >
             <div className="glass-panel p-8 sm:p-10 rounded-3xl relative overflow-hidden flex-1 flex flex-col justify-between">
               <div>
                 <div className="flex items-center space-x-2.5 mb-8">
@@ -197,10 +210,16 @@ export default function ContactSection() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Custom Interactive Booking Form (7 wide) */}
-          <div className="lg:col-span-7 flex flex-col">
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="lg:col-span-7 flex flex-col"
+          >
             <div className="glass-panel p-8 sm:p-10 rounded-3xl relative overflow-hidden flex-1 flex flex-col justify-between">
               
               {submitStatus === 'success' ? (
@@ -331,7 +350,7 @@ export default function ContactSection() {
               )}
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
 

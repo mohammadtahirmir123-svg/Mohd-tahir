@@ -53,7 +53,7 @@ export default function CustomCursor() {
       }
       
       if (aura) {
-        aura.style.transform = `translate3d(${trail.current.x - (isHovered ? 30 : 15)}px, ${trail.current.y - (isHovered ? 30 : 15)}px, 0)`;
+        aura.style.transform = `translate3d(${trail.current.x - (isHovered ? 40 : 15)}px, ${trail.current.y - (isHovered ? 40 : 15)}px, 0)`;
       }
       
       if (isTracking) {
@@ -119,12 +119,12 @@ export default function CustomCursor() {
       <div
         ref={auraRef}
         id="cursor-aura"
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-50 transition-all duration-300 ease-out border border-purple-500/30"
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-50 transition-all duration-300 ease-out border border-purple-500/50 backdrop-blur-[1px]"
         style={{
-          width: isHovered ? '60px' : '30px',
-          height: isHovered ? '60px' : '30px',
-          backgroundColor: isHovered ? 'rgba(168, 85, 247, 0.15)' : 'rgba(168, 85, 247, 0.02)',
-          boxShadow: isHovered ? '0 0 20px rgba(168, 85, 247, 0.5)' : '0 0 4px rgba(168, 85, 247, 0.1)',
+          width: isHovered ? '80px' : '30px',
+          height: isHovered ? '80px' : '30px',
+          backgroundColor: isHovered ? 'rgba(168, 85, 247, 0.2)' : 'rgba(168, 85, 247, 0.05)',
+          boxShadow: isHovered ? '0 0 30px rgba(168, 85, 247, 0.6), inset 0 0 15px rgba(236, 72, 153, 0.4)' : '0 0 10px rgba(168, 85, 247, 0.3)',
         }}
       />
     </div>

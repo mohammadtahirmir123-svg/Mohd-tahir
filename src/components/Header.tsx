@@ -85,67 +85,9 @@ export default function Header() {
 
   return (
     <>
-      {/* Real-time Automated Admissions Top ticker banner */}
-      <div 
-        id="top-admissions-ticker"
-        onClick={() => handleScrollTo('workshop')}
-        className="fixed top-0 left-0 w-full z-50 h-9 bg-black/95 border-b border-purple-500/25 hover:border-purple-400/50 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 cursor-pointer group transition-all duration-350 select-none overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-indigo-500/5 animate-pulse" />
-        
-        {/* Left Status Node */}
-        <div className="flex items-center space-x-2 relative z-10 shrink-0">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span className="font-mono text-[7px] sm:text-[9px] font-black tracking-widest text-[#a855f7] uppercase flex items-center gap-1 sm:gap-1.5">
-            <span>SYS_LIVE:</span>
-            <span className="text-gray-200 hidden xs:inline">ADMISSION MONITOR</span>
-          </span>
-        </div>
-
-        {/* Center Automated Content Rotation of Tracks */}
-        <div className="flex-1 max-w-[200px] xs:max-w-xs sm:max-w-lg md:max-w-2xl mx-auto px-2 relative z-10 overflow-hidden h-full flex items-center justify-center">
-          <div className="relative w-full h-4">
-            {tickers.map((text, idx) => (
-              <div
-                key={idx}
-                className={`absolute inset-0 flex items-center justify-center text-[7px] xs:text-[8px] sm:text-[10px] font-mono tracking-wide uppercase transition-all duration-500 text-center w-full ${
-                  idx === tickerIndex 
-                    ? 'opacity-100 translate-y-0 text-white' 
-                    : 'opacity-0 translate-y-2 pointer-events-none'
-                }`}
-              >
-                {text}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Action Callout - Advanced Glowing Admission Portrait Badge */}
-        <div className="flex items-center relative z-10 shrink-0">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleScrollTo('workshop');
-            }}
-            className="px-3.5 py-1 bg-gradient-to-r from-purple-600 via-pink-600 to-[#8b5cf6] hover:from-purple-500 hover:to-pink-500 rounded-full text-[8.5px] font-black text-white tracking-widest uppercase border border-white/20 shadow-[0_0_15px_rgba(236,72,153,0.5)] hover:shadow-[0_0_25px_rgba(236,72,153,0.85)] hover:scale-[1.04] active:scale-[0.97] transition-all duration-300 flex items-center space-x-1.5 cursor-pointer relative overflow-hidden group"
-          >
-            {/* Shimmer sweep animation */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-shimmer" />
-            <Sparkles className="w-3 h-3 text-pink-100 animate-pulse" />
-            <span>APPLY SECURELY</span>
-            <span className="bg-black/40 px-1 py-0.2 rounded font-mono text-[7px] border border-pink-400/30 text-pink-200 animate-pulse">
-              LIVE ⚡
-            </span>
-          </button>
-        </div>
-      </div>
-
       <header
         id="site-header"
-        className={`fixed top-9 left-0 w-full z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
           isScrolled
             ? 'py-3 bg-[#03000b]/80 border-b border-purple-500/15 backdrop-blur-md'
             : 'py-5 bg-transparent'
@@ -160,17 +102,23 @@ export default function Header() {
             onClick={() => handleScrollTo('home')}
           >
             <div className="relative w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/30 overflow-hidden transition-all duration-300 group-hover:border-purple-500/60 group-hover:shadow-[0_0_15px_rgba(168,85,247,0.3)]">
-              <Cpu className="w-5 h-5 text-purple-400 group-hover:rotate-12 transition-transform duration-300" />
+              <Cpu className="w-5 h-5 text-purple-400 group-hover:rotate-12 transition-transform duration-300 relative z-10" />
               <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(168,85,247,0.2)_50%,transparent_100%)] w-full h-[200%] animate-[scan_2s_ease-in-out_infinite]" />
             </div>
             <div>
-              <span className="font-display font-bold text-lg tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-purple-400">
+              <span className="font-display font-extrabold text-lg tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-indigo-400 drop-shadow-[0_0_10px_rgba(168,85,247,0.3)]">
                 MOHD TAHIR
               </span>
               <div className="flex items-center space-x-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-mono text-[9px] text-gray-400 uppercase tracking-widest">
-                  AI & DEV SPECIALIST
+                <span className="flex h-1.5 w-1.5 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                </span>
+                <span className="font-mono text-[9px] text-gray-300 uppercase tracking-[0.2em] relative overflow-hidden group-hover:text-purple-300 transition-colors duration-300 w-32 flex">
+                  <span className="inline-block animate-[slide_5s_linear_infinite] whitespace-nowrap">
+                    AUTOMATION & AI SPECIALIST
+                  </span>
                 </span>
               </div>
             </div>
@@ -228,12 +176,20 @@ export default function Header() {
               </div>
             </div>
 
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('replay-legendary-intro'))}
+              className="px-3.5 py-2 text-xs font-semibold text-pink-300 hover:text-white tracking-widest uppercase rounded-lg bg-pink-500/10 hover:bg-pink-500/20 transition-all duration-200 hover:scale-[1.03] border border-pink-500/30 hover:border-pink-400/50 flex items-center space-x-1.5 cursor-pointer shadow-sm"
+            >
+              <Film className="w-3.5 h-3.5 text-pink-400 animate-pulse" />
+              <span>3D Intro</span>
+            </button>
+
             {/* Dynamic Automated Highlight Admissions Button */}
             <button
-              onClick={() => handleScrollTo('workshop')}
+              onClick={() => window.dispatchEvent(new CustomEvent('open-admission-modal'))}
               className="relative px-3.5 py-2 text-xs font-black text-white tracking-widest uppercase rounded-lg bg-gradient-to-r from-purple-900 via-[#8b5cf6] to-indigo-950 border border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.4)] hover:shadow-[0_0_22px_rgba(168,85,247,0.7)] transition-all duration-300 hover:scale-[1.05] active:scale-[0.98] flex items-center space-x-1.5 cursor-pointer overflow-hidden group"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-infinite group-hover:translate-x-full transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer transition-transform duration-1000" />
               <Sparkles className="w-3.5 h-3.5 text-purple-200 animate-pulse" />
               <span>Academy Admission</span>
               <span className="flex h-1.5 w-1.5 relative">
@@ -243,20 +199,13 @@ export default function Header() {
             </button>
 
             <button
-              onClick={() => window.dispatchEvent(new CustomEvent('replay-legendary-intro'))}
-              className="px-3.5 py-2 text-xs font-semibold text-pink-300 hover:text-white tracking-widest uppercase rounded-lg bg-pink-500/10 hover:bg-pink-500/20 transition-all duration-200 hover:scale-[1.03] border border-pink-500/30 hover:border-pink-400/50 flex items-center space-x-1.5 cursor-pointer shadow-sm"
-            >
-              <Film className="w-3.5 h-3.5 text-pink-400 animate-pulse" />
-              <span>3D Intro</span>
-            </button>
-
-            <button
               onClick={() => window.dispatchEvent(new CustomEvent('open-share-hub'))}
               className="px-3.5 py-2 text-xs font-semibold text-purple-300 hover:text-white tracking-widest uppercase rounded-lg bg-purple-500/10 hover:bg-purple-500/20 transition-all duration-200 hover:scale-[1.03] border border-purple-500/30 hover:border-purple-400/50 flex items-center space-x-1.5 cursor-pointer shadow-sm"
             >
               <Share2 className="w-3.5 h-3.5 text-purple-400" />
               <span>Share App</span>
             </button>
+
             <button
               id="header-cta"
               onClick={() => handleScrollTo('contact')}
@@ -287,7 +236,7 @@ export default function Header() {
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
-                handleScrollTo('workshop');
+                window.dispatchEvent(new CustomEvent('open-admission-modal'));
               }}
               className="w-full py-3 text-center text-xs font-black text-white tracking-widest uppercase rounded-xl bg-gradient-to-r from-purple-800 to-indigo-900 border border-purple-400/40 shadow-[0_4px_18px_rgba(168,85,247,0.35)] flex items-center justify-center space-x-2 animate-pulse"
             >

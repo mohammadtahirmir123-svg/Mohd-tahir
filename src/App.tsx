@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
-import ShareShowcase from './components/ShareShowcase';
+import AdmissionModal from './components/AdmissionModal';
+import TelemetryShareCenter from './components/TelemetryShareCenter';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
 import ExperienceSection from './components/ExperienceSection';
@@ -28,13 +29,26 @@ export default function App() {
     return true;
   });
 
+  const [isOffline, setIsOffline] = useState(typeof navigator !== 'undefined' ? !navigator.onLine : false);
+
   useEffect(() => {
     const handleReplay = () => {
       sessionStorage.removeItem('tahir_intro_completed');
       setShowIntro(true);
     };
+    
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
     window.addEventListener('replay-legendary-intro', handleReplay);
-    return () => window.removeEventListener('replay-legendary-intro', handleReplay);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('replay-legendary-intro', handleReplay);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
 
   const handleIntroComplete = () => {
@@ -58,14 +72,17 @@ export default function App() {
       {/* Advanced Futuristic Core AI System HUD */}
       <CoreSystemEngine />
 
-      {/* Persistent Share and Client Pitch Dashboard */}
-      <ShareShowcase />
+      {/* Global Registration Form Modal */}
+      <AdmissionModal />
+
+      {/* Unified Interactive Telemetry and Secure Share Console (Levels 1-3) */}
+      <TelemetryShareCenter />
 
       {/* Dynamic modules flow */}
       <main className="relative z-10 w-full overflow-hidden">
         {/* HERO SECTION WITH DUAL PORTRAIT MATRIX */}
         <HeroSection />
-
+        
         {/* ABOUT SECTION */}
         <AboutSection />
 
@@ -83,8 +100,8 @@ export default function App() {
 
         {/* AI AUTOMATION SHOWCASE */}
         <AIShowcase />
-
-        {/* CLIENT SUCCESS & TESTIMONIALS SECTION */}
+        
+        {/* TESTIMONIALS SECTION */}
         <ClientSuccess />
 
         {/* PROCESS SECTION */}
@@ -110,6 +127,25 @@ export default function App() {
           <p className="text-purple-500/40 mt-2">CRAFTED FOR EXECUTIVE SCALE & BRAND PERFORMANCE.</p>
         </div>
       </footer>
+
+      {/* Extreme Low-latency Offline Status HUD Panel */}
+      {isOffline && (
+        <div 
+          id="offline-system-badge"
+          className="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-purple-950/40 backdrop-blur-xl border border-purple-500/30 text-purple-200 font-mono text-[10px] sm:text-xs px-4 py-3 rounded-xl z-50 flex items-center gap-3 shadow-[0_0_30px_rgba(168,85,247,0.15)] animate-pulse hover:border-purple-500/50 transition-colors"
+        >
+          <div className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+          </div>
+          <div>
+            <span className="text-white font-semibold">🌌 OFFLINE CORE ACTIVE</span>
+            <span className="mx-2 text-purple-500/60 font-sans">|</span>
+            <span className="text-purple-300">Porting 3D & Text assets from local IndexedDB</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
